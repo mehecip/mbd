@@ -72,7 +72,7 @@ Connect:
 
 	/*
 	|Constant Source| -------> |     |
-							   | Sum | -------> | Sink |
+				   | Sum | -------> | Sink |
 	 |Liniar Source|  -------> |     |
 	*/
 
