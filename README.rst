@@ -71,9 +71,9 @@ Connect:
 	sum->connect(0, sink, 0);
 
 	/*
-	|Constant Source| -------> |     |
-				   | Sum | -------> | Sink |
-	 |Liniar Source|  -------> |     |
+	| Constant Source |0>--------><0|     |
+                                    | Sum |0>-------><0| Sink |
+     | Liniar Source |0>---------><1|     |
 	*/
 
 Execute (in the correct order):
