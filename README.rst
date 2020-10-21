@@ -72,8 +72,8 @@ Connect:
 
 	/*
 	| Constant Source |0>--------><0|     |
-                                    | Sum |0>-------><0| Sink |
-     | Liniar Source |0>---------><1|     |
+                                        | Sum |0>-------><0| Sink |
+         | Liniar Source |0>---------><1|     |
 	*/
 
 Execute (in the correct order):
