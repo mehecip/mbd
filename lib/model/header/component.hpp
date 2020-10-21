@@ -1,29 +1,21 @@
 #pragma once
 #include <cstdint>
 #include <string>
-
 #include <memory>
-
-#include <vector>
-#include <unordered_map>
-
-#include <unordered_set>
-
-#include <algorithm>
-
-#include <functional>
 
 #include "node.hpp"
 #include "log_level.hpp"
 #include "connection_state.hpp"
+#include "msg_dispatcher.hpp"
 
 namespace mbd
 {
-
+class component; //fw declaration
+using component_ptr_t = std::unique_ptr<component>;
 using node_ptr_t = std::unique_ptr<node>;
-using msg_callbacks_t = std::function<void(log_level, const std::string&)>;
 
-class component
+class component 
+	: public msg_dispatcher
 {
 
 public:
@@ -41,18 +33,16 @@ public:
 	// sum -> true
 	// source -> false
 	// unit delay -> false (the CURRENT value of the input determines the NEXT value of the output)
-	// this method is used by a controller to determin the execution order of the blocks
+	// this method is used by a controller to determine the execution order of each component
 	virtual bool is_feedthrough() const = 0;
 
 	virtual ~component() {};
 
 	const std::string& get_name() const;
 
-	bool connect(std::uint64_t this_out, const std::unique_ptr<component>& other, std::uint64_t other_in);
+	bool connect(std::uint64_t this_out, const component_ptr_t& other, std::uint64_t other_in);
 
-	bool disconnect(std::uint64_t this_out, const std::unique_ptr<component>& other, std::uint64_t other_in);
-
-	void add_msg_callback(const msg_callbacks_t& f);
+	bool disconnect(std::uint64_t this_out, const component_ptr_t& other, std::uint64_t other_in);
 
 protected:
 	std::string _name;
@@ -73,25 +63,21 @@ protected:
 
 	// for update() you would like to put/get data
 	template<typename T>
-	T get_input(std::uint64_t index)
+	const T& get_input(std::uint64_t index) const
 	{
 		return _node->get_input<T>(index);
 	}
 
 	template<typename T>
-	void set_output(std::uint64_t index, const T& data)
+	void set_output(std::uint64_t index, const T& data) const
 	{
 		_node->set_output<T>(index, data);
 	}
-
-	void add_message(log_level lvl, const std::string& msg);
 
 private:
 	// a node is type which holds the ports and manages their connections and data
 	// e.g. another layer of abstraction the component and ports
 	const node_ptr_t _node;
-
-	std::vector<msg_callbacks_t> _msg_callbacks;
 
 	void log_connection_state(connection_state expected, connection_state current, const std::string& status);
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <typeindex>
 
 #include "data_type.hpp"
 

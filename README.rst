@@ -50,10 +50,10 @@ Build:
 	std::unique_ptr<component> csrc = std::make_unique<mbd::const_source<double>>("Constant Source", 10.0, 0.0, 0);
 	csrc->build();
 	
-	std::unique_ptr<component> lsrc = std::make_unique<mbd::liniar_source<double>>("Liniar Source", 0.0, -0.1);
+	std::unique_ptr<component> lsrc = std::make_unique<mbd::liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
 	lsrc->build();
 	
-	std::unique_ptr<component> sum_ = std::make_unique<mbd::sum<double>>("Sum");
+	std::unique_ptr<component> sum = std::make_unique<mbd::sum<double>>("Sum");
 	sum->build();
 	
 	std::unique_ptr<component> sink = std::make_unique<mbd::sink<double>>("Sink");
@@ -80,7 +80,7 @@ Execute (in the correct order):
 
 .. code:: C++	
 
-	for (std::uint64_t i = 0; i < 10'000; i++)
+	for (std::uint64_t i = 0; i < 10'000; ++i)
 	{
 		csrc->update(i);
 		lsrc->update(i);

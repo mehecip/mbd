@@ -52,7 +52,7 @@ private:
 			if (out / _gain != in)
 			{
 				_overflow = true;
-				component::add_message(log_level::ERROR, "Overflow in " + _name + " for input = '" + std::to_string(in) + "' and gain = '" + std::to_string(_gain) + "'");
+				add_message(log_level::ERROR, "Overflow in " + _name + " for input = '" + std::to_string(in) + "' and gain = '" + std::to_string(_gain) + "'");
 			}
 		}
 			

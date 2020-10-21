@@ -17,6 +17,7 @@ enum class connection_state : std::uint8_t
 	ERR_IN_PORT_INVALID,
 	ERR_OUT_PORT_INVALID,
 	ERR_IN_PORT_CONNECTED,
+	ERR_PORT_NOT_CONNECTED
 
 };
 
@@ -24,16 +25,17 @@ const inline std::string connection_info(connection_state state)
 {
 	const std::unordered_map<connection_state, std::string> info =
 	{
-		{connection_state::VALID, "valid"},
-		{connection_state::INVALID, "invalid"},
-		{connection_state::CONNECTED, "connected"},
-		{connection_state::NOT_CONNECTED, "not connected"},
-		{connection_state::ERR_SAME_DIRECTION, "error same port direction"},
-		{connection_state::ERR_DIFF_TYPE, "ports have different types"},
-		{connection_state::ERR_UNKNOWN, "unknown error"},
-		{connection_state::ERR_IN_PORT_INVALID, "input port index is invalid"},
-		{connection_state::ERR_OUT_PORT_INVALID, "output port index is invalid"},
-		{connection_state::ERR_IN_PORT_CONNECTED, "input port is already connected"},
+		{connection_state::VALID, "Valid connection"},
+		{connection_state::INVALID, "Invalid connection"},
+		{connection_state::CONNECTED, "Connection established"},
+		{connection_state::NOT_CONNECTED, "Not connected"},
+		{connection_state::ERR_SAME_DIRECTION, "Error same port direction"},
+		{connection_state::ERR_DIFF_TYPE, "Error ports have different types"},
+		{connection_state::ERR_UNKNOWN, "Error unknown"},
+		{connection_state::ERR_IN_PORT_INVALID, "Error input port index is invalid"},
+		{connection_state::ERR_OUT_PORT_INVALID, "Error output port index is invalid"},
+		{connection_state::ERR_IN_PORT_CONNECTED, "Error input port is already connected"},
+		{connection_state::ERR_PORT_NOT_CONNECTED, "Error ouput port had no connections"}		
 	};
 
 	return info.at(state);

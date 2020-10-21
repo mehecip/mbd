@@ -8,7 +8,7 @@ namespace impl
 
 template <typename T>
 class sink 
-	:  public component
+	: public component
 {
 public:
 	sink(const std::string& name) : component(name) {}

@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.17)
 project(model CXX)
 
 set(CPP_FILES
+  src/msg_dispatcher.cpp
   src/component.cpp
   src/node.cpp
   src/port.cpp
 )
 
 set(HPP_FILES
+  header/msg_dispatcher.hpp
   header/data_type.hpp
   header/component.hpp
   header/node.hpp

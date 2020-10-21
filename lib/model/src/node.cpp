@@ -1,9 +1,4 @@
 #pragma once
-#include <cstdint>
-#include <string>
-
-#include <vector>
-
 #include "node.hpp"
 
 namespace mbd
@@ -45,7 +40,7 @@ connection_state node::disconnect(std::uint64_t this_out, const std::unique_ptr<
 
 		if (inputs.size() == 0)
 		{
-			(*it).first->set_connected(false);
+			this_port->set_connected(false);
 			_connections.erase(it);
 		}
 
@@ -53,7 +48,7 @@ connection_state node::disconnect(std::uint64_t this_out, const std::unique_ptr<
 		return connection_state::NOT_CONNECTED;
 	}
 
-	return connection_state::ERR_UNKNOWN;
+	return connection_state::ERR_PORT_NOT_CONNECTED;
 }
 
 connection_state node::validate(std::uint64_t this_out, const std::unique_ptr<node>& other, std::uint64_t other_in)

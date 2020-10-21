@@ -1,9 +1,8 @@
 #pragma once
-#include <cstdint>
 #include <string>
-
-#include <vector>
+#include <cstdint>
 #include <memory>
+#include <vector>
 #include <unordered_map>
 
 #include "port.hpp"
@@ -24,6 +23,8 @@ public:
 
 	connection_state disconnect(std::uint64_t this_out, const std::unique_ptr<node>& other, std::uint64_t other_in);
 
+	// setting an ouput basically means that we have to write the input ports we are connected to
+	// so write_data on this ouput can be avoided to gain some performance
 	template<typename T>
 	void set_output(std::uint64_t index, const T& data) const
 	{
