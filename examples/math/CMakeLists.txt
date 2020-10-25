@@ -15,6 +15,7 @@ set(HPP_FILES
   header/unit_delay.hpp
 )
 
+
 add_executable( math_example 
 	${HPP_FILES}
 	${CPP_FILES}
@@ -28,6 +29,22 @@ include_directories (
 target_link_libraries(math_example 
 	model
 )
+
+if(BUILD_CONTROLLER)
+	add_definitions(-DBUILD_CONTROLLER_EXAMPLES)
+	
+	include_directories ( 
+		../../lib/controller/header
+	)
+	
+	target_link_libraries(math_example 
+		controller
+	)
+endif()
+
+
+
+set(CMAKE_CXX_STANDARD 14)
 
 set_target_properties(math_example
   PROPERTIES

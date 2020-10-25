@@ -1,5 +1,5 @@
 #pragma once
-#include "component.hpp"
+#include "model.hpp"
 
 namespace mbd
 {
@@ -8,10 +8,10 @@ namespace impl
 
 template <typename T>
 class mathop 
-	: public component
+	: public model
 {
 public:
-	mathop(const std::string& name) : component(name) {}
+	mathop(const std::string& name) : model(name) {}
 
 	void build() override
 	{
@@ -39,13 +39,12 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		const T in1 = component::get_input<T>(0);
-		const T in2 = component::get_input<T>(1);
+		const T in1 = model::get_input<T>(0);
+		const T in2 = model::get_input<T>(1);
 
-		component::set_output<T>(0, T{ in1 + in2 });
+		model::set_output<T>(0, T{ in1 + in2 });
 	}
 };
-
 
 
 template <typename T>
@@ -56,10 +55,10 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		const T in1 = component::get_input<T>(0);
-		const T in2 = component::get_input<T>(1);
+		const T in1 = model::get_input<T>(0);
+		const T in2 = model::get_input<T>(1);
 
-		component::set_output<T>(0, T{ in1 - in2 });
+		model::set_output<T>(0, T{ in1 - in2 });
 	}
 };
 
@@ -71,11 +70,13 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		auto in1 = component::get_input<T>(0);
-		auto in2 = component::get_input<T>(1);
+		auto in1 = model::get_input<T>(0);
+		auto in2 = model::get_input<T>(1);
 
 		if (in2 != T{ 0 })
-			component::set_output<T>(0, T{ in1 / in2 });
+			model::set_output<T>(0, T{ in1 / in2 });
+		else
+			model::add_message(log_level::ERROR, "Division by zero.")
 	}
 };
 
@@ -87,10 +88,10 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		auto in1 = component::get_input<T>(0);
-		auto in2 = component::get_input<T>(1);
+		auto in1 = model::get_input<T>(0);
+		auto in2 = model::get_input<T>(1);
 
-		component::set_output<T>(0, T{ in1 % in2 });
+		model::set_output<T>(0, T{ in1 % in2 });
 	}
 };
 
@@ -102,10 +103,10 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		auto in1 = component::get_input<T>(0);
-		auto in2 = component::get_input<T>(1);
+		auto in1 = model::get_input<T>(0);
+		auto in2 = model::get_input<T>(1);
 
-		component::set_output<T>(0, T{ in1 * in2 });
+		model::set_output<T>(0, T{ in1 * in2 });
 	}
 };
 

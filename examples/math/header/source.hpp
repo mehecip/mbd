@@ -1,5 +1,5 @@
 #pragma once
-#include "component.hpp"
+#include "model.hpp"
 
 namespace mbd
 {
@@ -8,10 +8,10 @@ namespace impl
 
 template <typename T>
 class source 
-	: public component
+	: public model
 {
 public:
-	source(const std::string& name, T init_val, std::uint64_t step_tick) : component(name), _value(init_val), _step_tick(step_tick) {};
+	source(const std::string& name, T init_val, std::uint64_t step_tick) : model(name), _value(init_val), _step_tick(step_tick) {};
 
 	void build() override
 	{
@@ -45,9 +45,9 @@ public:
 	void update(std::uint64_t tick) override
 	{
 		if(tick >= source<T>::_step_tick)
-			component::set_output(0, _const_val);
+			model::set_output(0, _const_val);
 		else
-			component::set_output(0, source<T>::_value);
+			model::set_output(0, source<T>::_value);
 	}
 
 private:
@@ -69,7 +69,7 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		component::set_output(0, source<T>::_value);
+		model::set_output(0, source<T>::_value);
 
 		if (tick >= source<T>::_step_tick)
 			source<T>::_value += _step_val;

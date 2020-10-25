@@ -6,7 +6,7 @@ namespace mbd
 {
 
 port::port(const std::string& name, port_dir_t d) 
-	: _dir(d), _name(name)
+	: _dir(d), _connected(false), _name(name), _data(nullptr)
 {}
 
 const port_dir_t port::get_dir() const

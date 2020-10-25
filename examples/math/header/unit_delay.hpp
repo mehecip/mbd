@@ -1,5 +1,5 @@
 #pragma once
-#include "component.hpp"
+#include "model.hpp"
 
 namespace mbd
 {
@@ -8,10 +8,10 @@ namespace impl
 
 template <typename T>
 class unit_delay
-	: public component
+	: public model
 {
 public:
-	unit_delay(const std::string& name, T init_val = T{}) : component(name), _value(init_val) {};
+	unit_delay(const std::string& name, T init_val = T{}) : model(name), _value(init_val) {};
 
 	void build() override
 	{
@@ -19,7 +19,7 @@ public:
 		add_output<T>(_name + "_OUT", _value);
 	}
 
-	void update() override
+	void update(std::uint64_t tick) override
 	{
 		set_output<T>(0, T{ _value });
 		_value = get_input<T>(0);

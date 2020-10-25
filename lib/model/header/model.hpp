@@ -10,39 +10,39 @@
 
 namespace mbd
 {
-class component; //fw declaration
-using component_ptr_t = std::unique_ptr<component>;
+class model; //fw declaration
+using model_ptr_t = std::shared_ptr<model>;
 using node_ptr_t = std::unique_ptr<node>;
 
-class component 
+class model 
 	: public msg_dispatcher
 {
 
 public:
-	component(const std::string& n);
+	model(const std::string& n);
 
 	// called when building
-	// use to add inpus/outputs to your component
+	// use to add inpus/outputs to your model
 	virtual void build() = 0;
 
 	// called when executing
 	virtual void update(std::uint64_t tick) = 0;
 
-	// a component is feedthrough if the CURRENT value of an input determines the CURRENT value of an output
+	// a model is feedthrough if the CURRENT value of an input determines the CURRENT value of an output
 	// e.g.:
 	// sum -> true
 	// source -> false
 	// unit delay -> false (the CURRENT value of the input determines the NEXT value of the output)
-	// this method is used by a controller to determine the execution order of each component
+	// this method is used by a controller to determine the execution order of each model
 	virtual bool is_feedthrough() const = 0;
 
-	virtual ~component() {};
+	virtual ~model() {};
 
 	const std::string& get_name() const;
 
-	bool connect(std::uint64_t this_out, const component_ptr_t& other, std::uint64_t other_in);
+	bool connect(std::uint64_t this_out, const model_ptr_t& other, std::uint64_t other_in);
 
-	bool disconnect(std::uint64_t this_out, const component_ptr_t& other, std::uint64_t other_in);
+	bool disconnect(std::uint64_t this_out, const model_ptr_t& other, std::uint64_t other_in);
 
 protected:
 	std::string _name;
@@ -75,8 +75,8 @@ protected:
 	}
 
 private:
-	// a node is type which holds the ports and manages their connections and data
-	// e.g. another layer of abstraction the component and ports
+	// node is type which holds the ports and manages their connections and data
+	// e.g. another layer of abstraction between the model and ports
 	const node_ptr_t _node;
 
 	void log_connection_state(connection_state expected, connection_state current, const std::string& status);

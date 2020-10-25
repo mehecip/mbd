@@ -1,6 +1,6 @@
 #pragma once
 
-#include "component.hpp"
+#include "model.hpp"
 
 #include <limits>
 #include <typeinfo>
@@ -12,13 +12,13 @@ namespace impl
 
 template <typename IN, typename OUT>
 class type_convertor
-	: public component
+	: public model
 {
 private:
 	bool _overflow;
 
 public:
-	type_convertor(const std::string& name) : component(name), _overflow(false) {}
+	type_convertor(const std::string& name) : model(name), _overflow(false) {}
 
 	void build() override
 	{

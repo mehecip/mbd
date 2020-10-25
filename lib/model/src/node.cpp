@@ -33,22 +33,20 @@ connection_state node::disconnect(std::uint64_t this_out, const std::unique_ptr<
 	const auto other_port = other->_in_ports[other_in];
 
 	auto& it = _connections.find(this_port);
-	if (it != _connections.end())
+	if (it == _connections.end())
+		return connection_state::ERR_PORT_NOT_CONNECTED;
+
+	auto& inputs = (*it).second;
+	inputs.erase(std::remove(inputs.begin(), inputs.end(), other_port), inputs.end());
+
+	if (inputs.size() == 0)
 	{
-		auto& inputs = (*it).second;
-		inputs.erase(std::remove(inputs.begin(), inputs.end(), other_port), inputs.end());
-
-		if (inputs.size() == 0)
-		{
-			this_port->set_connected(false);
-			_connections.erase(it);
-		}
-
-		other_port->set_connected(false);
-		return connection_state::NOT_CONNECTED;
+		this_port->set_connected(false);
+		_connections.erase(it);
 	}
 
-	return connection_state::ERR_PORT_NOT_CONNECTED;
+	other_port->set_connected(false);
+	return connection_state::NOT_CONNECTED;
 }
 
 connection_state node::validate(std::uint64_t this_out, const std::unique_ptr<node>& other, std::uint64_t other_in)

@@ -4,7 +4,7 @@ project(model CXX)
 
 set(CPP_FILES
   src/msg_dispatcher.cpp
-  src/component.cpp
+  src/model.cpp
   src/node.cpp
   src/port.cpp
 )
@@ -12,7 +12,7 @@ set(CPP_FILES
 set(HPP_FILES
   header/msg_dispatcher.hpp
   header/data_type.hpp
-  header/component.hpp
+  header/model.hpp
   header/node.hpp
   header/port.hpp
   header/log_level.hpp
@@ -24,7 +24,7 @@ add_library( model
 	${CPP_FILES}
 )
 
-include_directories ( header )
+include_directories(header)
 
 target_link_libraries(model)
 

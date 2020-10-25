@@ -5,20 +5,15 @@ project(mbd CXX)
 add_subdirectory(lib/model)
 
 # controller
-option(BUILD_CONTROLLER "Build CONTROLLER" OFF)
+option(BUILD_CONTROLLER "Build My Controller or make your own" ON)
 if(BUILD_CONTROLLER)
-  message("Controller not implemented yet")
+  add_subdirectory(lib/controller)	
 endif()
 
 # examples
 option(BUILD_EXAMPLES "Build Examples" ON)
 if(BUILD_EXAMPLES)
-
 	add_subdirectory(examples/math)	
-	
-	if(BUILD_CONTROLLER)
-		message("No Examples for controller yet")
-	endif()
 endif()
 
 set(CMAKE_CXX_STANDARD 14)

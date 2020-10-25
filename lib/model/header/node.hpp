@@ -23,21 +23,21 @@ public:
 
 	connection_state disconnect(std::uint64_t this_out, const std::unique_ptr<node>& other, std::uint64_t other_in);
 
-	// setting an ouput basically means that we have to write the input ports we are connected to
-	// so write_data on this ouput can be avoided to gain some performance
+	// setting an ouput basically means that we have to write to the input ports we are connected to
+	// so actually writing data on this ouput can be avoided to gain some performance
 	template<typename T>
 	void set_output(std::uint64_t index, const T& data) const
 	{
 		const auto& it = _connections.find(_out_ports[index]);
-		if (it != _connections.end())
-		{
-			const auto& inputs = (*it).second;
-			std::for_each(inputs.begin(), inputs.end(),
-				[&](const auto& input)
-				{
-					input->write_data<T>(data);
-				});
-		}
+		if (it == _connections.end()) 
+			return; // no connections to this port -> nothing to update
+
+		const auto& inputs = (*it).second;
+		std::for_each(inputs.begin(), inputs.end(),
+			[&](const auto& input)
+			{
+				input->write_data<T>(data);
+			});
 	}
 
 	template<typename T>
@@ -69,7 +69,7 @@ private:
 	std::vector<port_ptr_t> _out_ports;
 
 	std::unordered_map<port_ptr_t, std::vector<port_ptr_t>> _connections;
-	
+
 	connection_state validate(std::uint64_t this_out, const std::unique_ptr<node>& other, std::uint64_t other_in);
 };
 

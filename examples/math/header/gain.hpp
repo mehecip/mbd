@@ -1,5 +1,5 @@
 #pragma once
-#include "component.hpp"
+#include "model.hpp"
 
 namespace mbd
 {
@@ -8,26 +8,26 @@ namespace impl
 
 template <typename T>
 class gain
-	: public component
+	: public model
 {
 public:
-	gain(const std::string& name, T gain) : component(name), _gain(gain), _overflow(false), _zero(T{}) {}
+	gain(const std::string& name, T gain) : model(name), _gain(gain), _overflow(false), _zero(T{}) {}
 
 	void build() override
 	{
-		component::add_input<T>(component::_name + "_In1", T{});
+		model::add_input<T>(model::_name + "_In1", T{});
 
-		component::add_output<T>(component::_name + "_Out1", T{});
+		model::add_output<T>(model::_name + "_Out1", T{});
 	}
 
 	void update(std::uint64_t tick) override
 	{
-		const T in = component::get_input<T>(0);
+		const T in = model::get_input<T>(0);
 		const T out = in * _gain;
 		
 		check_overflow(in, out);
 
-		component::set_output<T>(0, std::move(out));
+		model::set_output<T>(0, std::move(out));
 	}
 
 	bool is_feedthrough() const override

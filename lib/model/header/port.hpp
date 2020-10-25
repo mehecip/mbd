@@ -53,7 +53,7 @@ public:
 
 private:
 	const port_dir_t _dir;
-	bool _connected = false;
+	bool _connected;
 
 	std::string _name;
 	std::unique_ptr<i_data_type> _data;
