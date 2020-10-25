@@ -12,7 +12,7 @@ Implement:
 
 .. code:: C++
 
-	#include "component.hpp"
+	#include "model.hpp"
 
 	template <typename T>
 	class sum
@@ -97,6 +97,8 @@ Usage - mbd::conntroller
 
 .. code:: C++
 
+	#include "controller.hpp"
+	
 	using const_src_d_t = const_source<double>;
 	using lin_src_d_t = liniar_source<double>;
 	using add_d_t = add<double>;
