@@ -53,22 +53,22 @@ Build:
 	auto lsrc = std::make_shared<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
 	lsrc->build();
 	
-	auto sum = std::make_shared<add<double>>("Sum");
-	sum->build();
+	auto sum_ = std::make_shared<sum<double>>("Sum");
+	sum_->build();
 	
-	auto sink = std::make_shared<sink<double>>("Sink");
-	sink->build();
+	auto sink_ = std::make_shared<sink_<double>>("Sink");
+	sink_->build();
 	
 	
 Connect:
 
 .. code:: C++
 
-	csrc->connect(0, sum, 0);
+	csrc->connect(0, sum_, 0);
 
-	lsrc->connect(0, sum, 1);
+	lsrc->connect(0, sum_, 1);
 	
-	sum->connect(0, sink, 0);
+	sum_->connect(0, sink_, 0);
 
 	/**************************************************************
 	| Constant Source |0>-------->0|     |
@@ -85,9 +85,9 @@ Execute (in the correct order):
 		csrc->update(i);
 		lsrc->update(i);
 		
-		sum->update(i);
+		sum_->update(i);
 		
-		sink->update(i);
+		sink_->update(i);
 	}
 
 
@@ -96,6 +96,7 @@ Usage - mbd::conntroller
 ------------------------
 
 .. code:: C++
+
 	using const_src_d_t = const_source<double>;
 	using lin_src_d_t = liniar_source<double>;
 	using add_d_t = add<double>;
