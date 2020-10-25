@@ -96,6 +96,7 @@ Usage - mbd::conntroller
 ------------------------
 
 Create the controller:
+
 .. code:: C++
 
 	#include "controller.hpp"
@@ -108,6 +109,7 @@ Create the controller:
 	mbd::controller cntrl(message_callback);
 
 Register the models:
+
 .. code:: C++
 
 	cntrl.register_model<const_src_d_t>("Constant Source", 10.0, 0.0, 0);
@@ -116,6 +118,7 @@ Register the models:
 	cntrl.register_model<sink_d_t>("Sink");
 	
 Connect the models:
+
 .. code:: C++
 
 	cntrl.connect("Constant Source", 0, "Sum", 0);
@@ -123,18 +126,23 @@ Connect the models:
 	cntrl.connect("Sum", 0, "Sink", 0);
 	
 Calculate the execution order:
+
 .. code:: C++
 
 	cntrl.excution_order();
 
 Execute:
+
 .. code:: C++
 
 	cntrl.run(10'000);
+	
 Use:
+
 .. code:: C++
 
 	auto sink_ = cntrl.get<sink_d_t>("Sink");
+
 
 ToDO:
 -----
