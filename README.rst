@@ -95,6 +95,7 @@ Execute (in the correct order):
 Usage - mbd::conntroller
 ------------------------
 
+Create the controller:
 .. code:: C++
 
 	#include "controller.hpp"
@@ -102,27 +103,36 @@ Usage - mbd::conntroller
 	using const_src_d_t = const_source<double>;
 	using lin_src_d_t = liniar_source<double>;
 	using add_d_t = add<double>;
-	using sink_d_t = sink<double>;
-
-	// create the controller
+	using sink_d_t = sink<double>; 
+	
 	mbd::controller cntrl(message_callback);
 
-	// register your models
+Register the models:
+.. code:: C++
+
 	cntrl.register_model<const_src_d_t>("Constant Source", 10.0, 0.0, 0);
 	cntrl.register_model<lin_src_f_t>("Liniar Source", 0.0, -0.1, 0);
 	cntrl.register_model<add_d_t>("Sum");
 	cntrl.register_model<sink_d_t>("Sink");
+	
+Connect the models:
+.. code:: C++
 
-	// connect the models
 	cntrl.connect("Constant Source", 0, "Sum", 0);
 	cntrl.connect("Liniar Source", 0, "Sum", 1);
 	cntrl.connect("Sum", 0, "Sink", 0);
+	
+Calculate the execution order:
+.. code:: C++
 
-	// calculate the execution order of the models
 	cntrl.excution_order();
 
-	// execute
+Execute:
+.. code:: C++
+
 	cntrl.run(10'000);
+Use:
+.. code:: C++
 
 	auto sink_ = cntrl.get<sink_d_t>("Sink");
 
