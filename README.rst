@@ -16,7 +16,7 @@ Implement:
 
 	template <typename T>
 	class sum
-		: public component /* inherit from component class */
+		: public model /* inherit from mbd::model class */
 	{
 
 	public:
@@ -24,22 +24,22 @@ Implement:
 		/* override build() to add the inputs and outputs */
 		void build() override
 		{
-			component::add_input<T>("Input 1", T{});
-			component::add_input<T>("Input 2", T{});
+			model::add_input<T>("Input 1", T{});
+			model::add_input<T>("Input 2", T{});
 
-			component::add_output<T>("Output", T{});
+			model::add_output<T>("Output", T{});
 		}
 		
-		/* override update() to implement the model logic */
+		/* override update() to implement the logic */
 		void update(std::uint64_t tick) override
 		{
-			const T in1 = component::get_input<T>(0);
-			const T in2 = component::get_input<T>(1);
+			const T in1 = model::get_input<T>(0);
+			const T in2 = model::get_input<T>(1);
 
-			component::set_output<T>(0, T{ in1 + in2 });
+			model::set_output<T>(0, T{ in1 + in2 });
 		}
 		
-		sum(const std::string& name) : component(name) {}
+		sum(const std::string& name) : model(name) {}
 	}
 	
 
