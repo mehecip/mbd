@@ -101,17 +101,17 @@ Create the controller:
 
 	#include "controller.hpp"
 	
-	using const_src_d_t = const_source<double>;
-	using lin_src_d_t = liniar_source<double>;
-	using add_d_t = add<double>;
-	using sink_d_t = sink<double>; 
-	
 	mbd::controller cntrl(message_callback);
 
 Register the models:
 
 .. code:: C++
 
+	using const_src_d_t = const_source<double>;
+	using lin_src_d_t = liniar_source<double>;
+	using add_d_t = add<double>;
+	using sink_d_t = sink<double>; 
+	
 	cntrl.register_model<const_src_d_t>("Constant Source", 10.0, 0.0, 0);
 	cntrl.register_model<lin_src_f_t>("Liniar Source", 0.0, -0.1, 0);
 	cntrl.register_model<add_d_t>("Sum");
@@ -124,6 +124,12 @@ Connect the models:
 	cntrl.connect("Constant Source", 0, "Sum", 0);
 	cntrl.connect("Liniar Source", 0, "Sum", 1);
 	cntrl.connect("Sum", 0, "Sink", 0);
+
+	/**************************************************************
+	| Constant Source |0>-------->0|     |
+                                       | Sum |0>------->0| Sink |
+          | Liniar Source |0>-------->1|     |
+	***************************************************************/
 	
 Calculate the execution order:
 
