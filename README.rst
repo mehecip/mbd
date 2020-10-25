@@ -5,8 +5,8 @@ mbd
 C++ Model Based Development/Engineering Library 
 
 
-Usage
------
+Usage - mbd::model
+-------------------
 
 Implement:
 
@@ -47,16 +47,16 @@ Build:
 
 .. code:: C++
 
-	std::unique_ptr<component> csrc = std::make_unique<mbd::const_source<double>>("Constant Source", 10.0, 0.0, 0);
+	auto csrc = std::make_shared<const_source<double>>("Constant Source", 10.0, 0.0, 0);
 	csrc->build();
 	
-	std::unique_ptr<component> lsrc = std::make_unique<mbd::liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
+	auto lsrc = std::make_shared<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
 	lsrc->build();
 	
-	std::unique_ptr<component> sum = std::make_unique<mbd::sum<double>>("Sum");
+	auto sum = std::make_shared<add<double>>("Sum");
 	sum->build();
 	
-	std::unique_ptr<component> sink = std::make_unique<mbd::sink<double>>("Sink");
+	auto sink = std::make_shared<sink<double>>("Sink");
 	sink->build();
 	
 	
@@ -91,8 +91,36 @@ Execute (in the correct order):
 	}
 
 
-	
+
+Usage - mbd::conntroller
+------------------------
+
+.. code:: C++
+	using const_src_d_t = const_source<double>;
+	using lin_src_d_t = liniar_source<double>;
+	using add_d_t = add<double>;
+	using sink_d_t = sink<double>;
+
+
+	mbd::controller cntrl(message_callback);
+
+	cntrl.register_model<const_src_d_t>("Constant Source", 10.0, 0.0, 0);
+	cntrl.register_model<lin_src_f_t>("Liniar Source", 0.0, -0.1, 0);
+	cntrl.register_model<add_d_t>("Sum");
+	cntrl.register_model<sink_d_t>("Sink");
+
+	cntrl.connect("Constant Source", 0, "Sum", 0);
+	cntrl.connect("Liniar Source", 0, "Sum", 1);
+	cntrl.connect("Converter", 0, "Sum", 1);
+	cntrl.connect("Sum", 0, "Sink", 0);
+
+	cntrl.excution_order();
+
+	cntrl.run(10'000);
+
+	auto sink_ = cntrl.get<sink_d_t>("Sink");
+
 ToDO:
 -----
 
-Implement ``controller`` and ``view``
+Implement ``view``
