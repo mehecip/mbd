@@ -104,21 +104,24 @@ Usage - mbd::conntroller
 	using add_d_t = add<double>;
 	using sink_d_t = sink<double>;
 
-
+	// create the controller
 	mbd::controller cntrl(message_callback);
 
+	// register your models
 	cntrl.register_model<const_src_d_t>("Constant Source", 10.0, 0.0, 0);
 	cntrl.register_model<lin_src_f_t>("Liniar Source", 0.0, -0.1, 0);
 	cntrl.register_model<add_d_t>("Sum");
 	cntrl.register_model<sink_d_t>("Sink");
 
+	// connect the models
 	cntrl.connect("Constant Source", 0, "Sum", 0);
 	cntrl.connect("Liniar Source", 0, "Sum", 1);
-	cntrl.connect("Converter", 0, "Sum", 1);
 	cntrl.connect("Sum", 0, "Sink", 0);
 
+	// calculate the execution order of the models
 	cntrl.excution_order();
 
+	// execute
 	cntrl.run(10'000);
 
 	auto sink_ = cntrl.get<sink_d_t>("Sink");
