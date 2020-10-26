@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.6)
 
 project(model CXX)
 
@@ -30,6 +30,7 @@ target_link_libraries(model)
 
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set_target_properties(model
   PROPERTIES

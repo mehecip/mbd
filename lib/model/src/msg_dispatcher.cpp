@@ -1,4 +1,3 @@
-#pragma once
 #include "msg_dispatcher.hpp"
 
 namespace mbd

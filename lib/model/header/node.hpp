@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 #include "port.hpp"
 #include "connection_state.hpp"
@@ -36,7 +37,7 @@ public:
 		std::for_each(inputs.begin(), inputs.end(),
 			[&](const auto& input)
 			{
-				input->write_data<T>(data);
+				input->template write_data<T>(data);
 			});
 	}
 
