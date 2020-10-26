@@ -8,12 +8,12 @@ C++ Model Based Development/Engineering Library
 Clone and build:
 -------------------
 
-``
-git clone https://github.com/mehecip/mbd.git
-cd mbd
-cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
-make f=Makefile
-``
+.. code:: console
+	git clone https://github.com/mehecip/mbd.git
+	cd mbd
+	cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
+	make f=Makefile
+
 Tested with Visual Studio 2019 on Windows and gcc 8.3 on Debian.
 
 
