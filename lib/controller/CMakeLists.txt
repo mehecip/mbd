@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.6)
 
 project(controller CXX)
 
@@ -20,12 +20,15 @@ header
 ../../lib/model/header
 )
 
+find_package(Threads)
 target_link_libraries(controller 
 	model
+	${CMAKE_THREAD_LIBS_INIT}
 )
 
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set_target_properties(model
   PROPERTIES

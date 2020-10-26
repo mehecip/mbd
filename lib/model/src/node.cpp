@@ -1,4 +1,3 @@
-#pragma once
 #include "node.hpp"
 
 namespace mbd
@@ -32,7 +31,7 @@ connection_state node::disconnect(std::uint64_t this_out, const std::unique_ptr<
 	const auto this_port = _out_ports[this_out];
 	const auto other_port = other->_in_ports[other_in];
 
-	auto& it = _connections.find(this_port);
+	const auto& it = _connections.find(this_port);
 	if (it == _connections.end())
 		return connection_state::ERR_PORT_NOT_CONNECTED;
 

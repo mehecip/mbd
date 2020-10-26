@@ -76,7 +76,7 @@ public:
 		if (in2 != T{ 0 })
 			model::set_output<T>(0, T{ in1 / in2 });
 		else
-			model::add_message(log_level::ERROR, "Division by zero.")
+			model::add_message(log_level::ERROR, "Division by zero.");
 	}
 };
 
