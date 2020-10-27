@@ -155,6 +155,7 @@ Calculate the execution order:
 Execute:
 
 .. code:: C++
+
 	// syncronous
 	cntrl.run(10'000);
 	
