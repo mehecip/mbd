@@ -8,6 +8,7 @@ C++ Model Based Development/Engineering Library
 - easy to use
 - portable: Tested on Windows 10(Visual Studio 2019), Debian VM(GCC 8.3) and Raspbian(GCC 4.9).
 
+
 Clone and build:
 -------------------
 
@@ -154,8 +155,11 @@ Calculate the execution order:
 Execute:
 
 .. code:: C++
-
+	// syncronous
 	cntrl.run(10'000);
+	
+	// or asyncronous
+	// cntrl.run_async(10'000);
 	
 Get:
 
