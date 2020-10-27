@@ -29,11 +29,7 @@ public:
 	template<typename T>
 	void set_output(std::uint64_t index, const T& data) const
 	{
-		const auto& it = _connections.find(_out_ports[index].get());
-		if (it == _connections.end()) 
-			return; // no connections to this port -> nothing to update
-
-		const auto& inputs = (*it).second;
+		const auto& inputs = _output_connections[index];
 		std::for_each(inputs.begin(), inputs.end(),
 			[&](const auto& input)
 			{
@@ -63,13 +59,15 @@ public:
 		p->set_data<T>(init_data);
 
 		_out_ports.push_back(std::move(p));
+		_output_connections.push_back({});
 	}
 
 private:
 	std::vector<port_ptr_t> _in_ports;
 	std::vector<port_ptr_t> _out_ports;
 
-	std::unordered_map<port*, std::vector<port*>> _connections;
+	// index represents the output port index and value is a vector of all connections from that port
+	std::vector<std::vector<port*>> _output_connections;
 
 	connection_state validate(std::uint64_t this_out, const std::unique_ptr<node>& other, std::uint64_t other_in);
 };
