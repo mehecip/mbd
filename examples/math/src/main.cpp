@@ -10,8 +10,42 @@
 
 #include <iostream>
 
+#include <chrono>
+
 using namespace mbd;
 using namespace mbd::impl;
+
+
+class Timer
+{
+public:
+	Timer() : beg_(clock_::now()) {}
+	void reset() { beg_ = clock_::now(); }
+
+	double elapsed_sec() const {
+		return std::chrono::duration_cast<second_>
+			(clock_::now() - beg_).count();
+	}
+
+	double elapsed_microsec() const {
+		return std::chrono::duration_cast<microsec_>
+			(clock_::now() - beg_).count();
+	}
+
+	double elapsed_mili() const {
+		return std::chrono::duration_cast<milisec_>
+			(clock_::now() - beg_).count();
+	}
+
+private:
+	typedef std::chrono::high_resolution_clock clock_;
+	typedef std::chrono::duration<double, std::ratio<1>> second_;
+	typedef std::chrono::duration<double, std::ratio<1, 1'000>> milisec_;
+	typedef std::chrono::duration<double, std::ratio<1, 1'000'000>> microsec_;
+
+	std::chrono::time_point<clock_> beg_;
+};
+
 
 void message_callback(log_level lvl, const std::string& msg)
 {
