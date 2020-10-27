@@ -3,6 +3,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <enum_hash.hpp>
+
 namespace mbd
 {
 	
@@ -16,7 +18,7 @@ enum class log_level : std::uint8_t
 
 const inline std::string level_info(log_level lvl)
 {
-	const std::unordered_map<log_level, std::string> info =
+	const std::unordered_map<log_level, std::string, enum_class_hash> info =
 	{
 		{log_level::DEBUG, "[DEBUG]"},
 		{log_level::INFO, "[INFO]"},

@@ -17,6 +17,7 @@ set(HPP_FILES
   header/port.hpp
   header/log_level.hpp
   header/connection_state.hpp
+  header/enum_hash.hpp
 )
 
 add_library( model 
