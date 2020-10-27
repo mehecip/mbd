@@ -4,6 +4,9 @@ mbd
 
 C++ Model Based Development/Engineering Library 
 
+- fast: Design with 6 models executed 10.000.000 ticks in 6.7 sec on Raspberry Pi 3, 0.6 sec on Windows 10 and 0.4 sec on Debian VM.
+- easy to use
+- portable: Tested on Windows 10(Visual Studio 2019), Debian VM(GCC 8.3) and Raspbian(GCC 4.9).
 
 Clone and build:
 -------------------
@@ -15,7 +18,6 @@ Clone and build:
 	cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
 	make f=Makefile
 
-Tested with Visual Studio 2019 on Windows and gcc 8.3 on Debian.
 
 Usage - mbd::model
 -------------------
@@ -59,16 +61,16 @@ Build:
 
 .. code:: C++
 
-	auto csrc = std::make_shared<const_source<double>>("Constant Source", 10.0, 0.0, 0);
+	auto csrc = std::make_unique<const_source<double>>("Constant Source", 10.0, 0.0, 0);
 	csrc->build();
 	
-	auto lsrc = std::make_shared<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
+	auto lsrc = std::make_unique<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
 	lsrc->build();
 	
-	auto sum_ = std::make_shared<sum<double>>("Sum");
+	auto sum_ = std::make_unique<sum<double>>("Sum");
 	sum_->build();
 	
-	auto sink_ = std::make_shared<sink_<double>>("Sink");
+	auto sink_ = std::make_unique<sink_<double>>("Sink");
 	sink_->build();
 	
 	
@@ -104,7 +106,7 @@ Execute (in the correct order):
 
 
 
-Usage - mbd::conntroller
+Usage - mbd::controller
 ------------------------
 
 Create the controller:
@@ -155,7 +157,7 @@ Execute:
 
 	cntrl.run(10'000);
 	
-Use:
+Get:
 
 .. code:: C++
 

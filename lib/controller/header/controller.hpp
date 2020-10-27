@@ -1,15 +1,10 @@
 #pragma once
 #include <queue>
 #include <unordered_map>
-#include<vector>
-#include<algorithm>
-#include<set>
-#include<future>
-#include <iostream>
-#include <map>
+#include <vector>
+#include <algorithm>
 #include <string>
-
-#include <tuple>
+#include <functional>
 
 #include "model.hpp"
 
@@ -36,7 +31,7 @@ public:
 	template<typename M, typename ... Args>
 	void register_model(const std::string& name, Args&&... args)
 	{
-		auto c = std::make_shared<M>(name, std::forward<Args>(args)...);
+		auto c = std::make_unique<M>(name, std::forward<Args>(args)...);
 		c->add_msg_callback(_callback_f);
 		c->build();
 
@@ -64,11 +59,11 @@ public:
 	template<typename T>
 	T* get(const std::string& name)
 	{
-		auto it = _models.find(name);
-		if (it != _models.end())
-			return dynamic_cast<T*>(it->second.get());
+		const auto& it = _models.find(name);
+		if (it == _models.end())
+			return nullptr;
 
-		return nullptr;
+		return dynamic_cast<T*>(it->second.get());
 	}
 
 private:
@@ -79,7 +74,7 @@ private:
 
 	// the index is the prio at which to call update()
 	// the values are all the obj that need to be updated at that time
-	std::vector<std::vector<model_ptr_t>> _priority_vect;
+	std::vector<std::vector<model*>> _priority_vect;
 	std::vector<std::string> _arithmetic_loop;
 
 	// sets the prio for comp as:

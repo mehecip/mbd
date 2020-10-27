@@ -16,8 +16,5 @@ if(BUILD_EXAMPLES)
 	add_subdirectory(examples/math)	
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 

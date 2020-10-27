@@ -1,10 +1,13 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <unordered_map>
+
+#include "enum_hash.hpp"
 
 namespace mbd
 {
-	
+
 enum class connection_state : std::uint8_t
 {
 	VALID = 0,
@@ -23,7 +26,7 @@ enum class connection_state : std::uint8_t
 
 const inline std::string connection_info(connection_state state)
 {
-	const std::unordered_map<connection_state, std::string> info =
+	const std::unordered_map<connection_state, std::string, enum_class_hash> info =
 	{
 		{connection_state::VALID, "Valid connection"},
 		{connection_state::INVALID, "Invalid connection"},

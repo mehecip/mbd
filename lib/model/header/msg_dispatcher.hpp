@@ -2,8 +2,8 @@
 #include <functional>
 #include <string>
 #include <algorithm>
+#include <vector>
 
-#include "node.hpp"
 #include "log_level.hpp"
 
 namespace mbd
