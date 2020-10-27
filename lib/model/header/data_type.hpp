@@ -13,9 +13,9 @@ struct i_data_type
 
 
 template<typename T>
-struct data_type_wrapper_t : public i_data_type
+struct data_type_wrapper : public i_data_type
 {
-	data_type_wrapper_t(T data) : _data(data) {};
+	data_type_wrapper(T data) : _data(data) {};
 	T _data;
 
 	const std::type_index get_type() const override

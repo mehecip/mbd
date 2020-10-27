@@ -36,19 +36,19 @@ public:
 	template<typename T>
 	void set_data(const T& data)
 	{
-		_data = std::make_unique<data_type_wrapper_t<T>>(data);
+		_data = std::make_unique<data_type_wrapper<T>>(data);
 	}
 
 	template<typename T>
 	void write_data(const T& data) const
 	{
-		static_cast<data_type_wrapper_t<T>*>(_data.get())->_data = data;
+		static_cast<data_type_wrapper<T>*>(_data.get())->_data = data;
 	}
 
 	template<typename T>
 	const T& read_data() const
 	{
-		return static_cast<data_type_wrapper_t<T>*>(_data.get())->_data;
+		return static_cast<data_type_wrapper<T>*>(_data.get())->_data;
 	}
 
 private:
