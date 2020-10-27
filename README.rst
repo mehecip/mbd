@@ -106,7 +106,7 @@ Execute (in the correct order):
 
 
 
-Usage - mbd::conntroller
+Usage - mbd::controller
 ------------------------
 
 Create the controller:
