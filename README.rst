@@ -59,16 +59,16 @@ Build:
 
 .. code:: C++
 
-	auto csrc = std::make_shared<const_source<double>>("Constant Source", 10.0, 0.0, 0);
+	auto csrc = std::make_unique<const_source<double>>("Constant Source", 10.0, 0.0, 0);
 	csrc->build();
 	
-	auto lsrc = std::make_shared<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
+	auto lsrc = std::make_unique<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
 	lsrc->build();
 	
-	auto sum_ = std::make_shared<sum<double>>("Sum");
+	auto sum_ = std::make_unique<sum<double>>("Sum");
 	sum_->build();
 	
-	auto sink_ = std::make_shared<sink_<double>>("Sink");
+	auto sink_ = std::make_unique<sink_<double>>("Sink");
 	sink_->build();
 	
 	
@@ -155,7 +155,7 @@ Execute:
 
 	cntrl.run(10'000);
 	
-Use:
+Get:
 
 .. code:: C++
 
