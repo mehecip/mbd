@@ -11,7 +11,7 @@
 namespace mbd
 {
 class model; //fw declaration
-using model_ptr_t = std::shared_ptr<model>;
+using model_ptr_t = std::unique_ptr<model>;
 using node_ptr_t = std::unique_ptr<node>;
 
 class model 

@@ -1,5 +1,5 @@
 #include <sstream>
-#include <algorithm>
+#include <future>
 
 #include "controller.hpp"
 
@@ -32,7 +32,7 @@ bool controller::excution_order()
 {
 	{
 		prio_map_t prio_map;
-		std::deque<std::string> q;
+		std::queue<std::string> q;
 
 		// add all the models that are not feedthrough with prio 0
 		// they will act as starting points in the bfs algo
@@ -42,7 +42,7 @@ bool controller::excution_order()
 				if (!m.second->is_feedthrough())
 				{
 					prio_map[m.first] = 0;
-					q.push_back(m.first);
+					q.push(m.first);
 				}
 			});
 
@@ -57,14 +57,14 @@ bool controller::excution_order()
 		while (!q.empty())
 		{
 			auto model = q.front();
-			q.pop_front();
+			q.pop();
 
 			update_prio_map(model, prio_map);
 
 			for (const auto& d : _descendents[model])
 			{
 				if (prio_map.find(d) == prio_map.end())
-					q.push_back(d);
+					q.push(d);
 			}
 
 			if (--loops == 0)
@@ -72,7 +72,8 @@ bool controller::excution_order()
 		}
 
 		add_to_prio_vect(prio_map);
-	}
+
+	} // prio_map and q not needed anymore
 
 	log_prio();
 
@@ -147,7 +148,7 @@ void controller::add_to_prio_vect(const prio_map_t& prio_map)
 	_priority_vect.resize(_models.size());
 
 	for (const auto& m : prio_map)
-		_priority_vect[m.second].push_back(_models[m.first]);
+		_priority_vect[m.second].push_back(_models[m.first].get());
 
 	_priority_vect.erase(
 		std::remove_if(_priority_vect.begin(), _priority_vect.end(),
@@ -178,8 +179,8 @@ void controller::log_arithmetic_loop()
 	std::ostringstream ss;
 
 	ss << "It seems there is an arithmetic loop: ";
-	for (const auto& m : _arithmetic_loop)
-		ss << "[" << m << "] ";
+	for (const auto& model_name : _arithmetic_loop)
+		ss << "[" << model_name << "] ";
 	ss << "\n";
 
 	_callback_f(log_level::ERROR, ss.str());
@@ -191,10 +192,11 @@ void controller::find_arithmetic_loop()
 	{
 		bool found = false;
 
-		const auto& model = el.second;
-		for (const auto& v : _priority_vect)
+		const auto& model_name = el.first;
+		const auto& model = el.second.get();
+		for (const auto& models : _priority_vect)
 		{
-			if (std::find(v.begin(), v.end(), model) != v.end())
+			if (std::find(models.begin(), models.end(), model) != models.end())
 			{
 				found = true;
 				break;
@@ -202,7 +204,7 @@ void controller::find_arithmetic_loop()
 		}
 
 		if (!found)
-			_arithmetic_loop.push_back(el.first);
+			_arithmetic_loop.push_back(model_name);
 	}
 }
 
