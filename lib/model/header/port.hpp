@@ -34,22 +34,13 @@ public:
 	const std::type_index get_data_type() const;
 
 	template<typename T>
-	void set_data(const T& data)
-	{
-		_data = std::make_unique<data_type_wrapper<T>>(data);
-	}
+	void set_data(const T& data);
 
 	template<typename T>
-	void write_data(const T& data) const
-	{
-		static_cast<data_type_wrapper<T>*>(_data.get())->_data = data;
-	}
+	void write_data(const T& data) const;
 
 	template<typename T>
-	const T& read_data() const
-	{
-		return static_cast<data_type_wrapper<T>*>(_data.get())->_data;
-	}
+	const T& read_data() const;
 
 private:
 	const port_dir_t _dir;
@@ -58,5 +49,26 @@ private:
 	std::string _name;
 	std::unique_ptr<i_data_type> _data;
 };
+
+
+
+template<typename T>
+inline void port::set_data(const T& data)
+{
+	_data = std::make_unique<data_type_wrapper<T>>(data);
+}
+
+template<typename T>
+inline void port::write_data(const T& data) const
+{
+	static_cast<data_type_wrapper<T>*>(_data.get())->_data = data;
+}
+
+template<typename T>
+inline const T& port::read_data() const
+{
+	return static_cast<data_type_wrapper<T>*>(_data.get())->_data;
+}
+
 
 } // namespace mbd

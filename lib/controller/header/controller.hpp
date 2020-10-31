@@ -29,14 +29,7 @@ public:
 
 	// creates, builds and stores a model of type M with name and args
 	template<typename M, typename ... Args>
-	void register_model(const std::string& name, Args&&... args)
-	{
-		auto c = std::make_unique<M>(name, std::forward<Args>(args)...);
-		c->add_msg_callback(_callback_f);
-		c->build();
-
-		_models[name] = std::move(c);
-	}
+	void register_model(const std::string& name, Args&&... args);
 
 	// connects the out_idx of out_model to the in_idx of in_model
 	bool connect(const std::string& out_model, std::uint64_t out_idx, const std::string& in_model, std::uint64_t in_idx);
@@ -57,14 +50,7 @@ public:
 	// or nullptr if T and model type dont match
 	// or nullptr if model with key = name is not found in the map
 	template<typename T>
-	T* get(const std::string& name)
-	{
-		const auto& it = _models.find(name);
-		if (it == _models.end())
-			return nullptr;
-
-		return dynamic_cast<T*>(it->second.get());
-	}
+	T* get(const std::string& name);
 
 private:
 	msg_callback_f _callback_f;
@@ -92,5 +78,24 @@ private:
 	void log_arithmetic_loop();
 };
 
+template<typename M, typename ... Args>
+inline void controller::register_model(const std::string& name, Args&&... args)
+{
+	auto c = std::make_unique<M>(name, std::forward<Args>(args)...);
+	c->add_msg_callback(_callback_f);
+	c->build();
+
+	_models[name] = std::move(c);
+}
+
+template<typename T>
+inline T* controller::get(const std::string& name)
+{
+	const auto& it = _models.find(name);
+	if (it == _models.end())
+		return nullptr;
+
+	return dynamic_cast<T*>(it->second.get());
+}
 
 }
