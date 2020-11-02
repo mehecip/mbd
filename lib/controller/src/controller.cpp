@@ -30,6 +30,9 @@ bool controller::connect(const std::string& out_model, std::uint64_t out_idx, co
 
 bool controller::excution_order()
 {
+	_arithmetic_loop.clear();
+	_priority_vect.clear();
+	
 	{
 		prio_map_t prio_map;
 		std::queue<std::string> q;
