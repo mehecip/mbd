@@ -4,7 +4,7 @@ mbd
 
 C++ Model Based Development/Engineering Library 
 
-- fast: Design with 6 models executed 10.000.000 ticks in 6.7 sec on Raspberry Pi 3, 0.6 sec on Windows 10 and 0.4 sec on Debian VM.
+- fast: Design with 6 models executed 10.000.000 ticks in 2.3 sec on Raspberry Pi 3, 0.6 sec on Windows 10 and 0.4 sec on Debian VM.
 - easy to use
 - portable: Tested on Windows 10(Visual Studio 2019), Debian VM(GCC 8.3) and Raspbian(GCC 4.9).
 - syncronous and asyncronous execution(based on execution order) available in the controller.
