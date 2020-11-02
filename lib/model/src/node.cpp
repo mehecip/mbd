@@ -9,13 +9,11 @@ connection_state node::connect(std::uint64_t this_out, const std::unique_ptr<nod
 	if (state != connection_state::VALID)
 		return state;
 
-	const auto this_port = _out_ports[this_out].get();
 	const auto other_port = other->_in_ports[other_in].get();
 
 	if (other_port->is_connected())
 		return connection_state::ERR_IN_PORT_CONNECTED;
 
-	this_port->set_connected(true);
 	other_port->set_connected(true);
 
 	_output_connections[this_out].push_back(other_port);
@@ -28,16 +26,14 @@ connection_state node::disconnect(std::uint64_t this_out, const std::unique_ptr<
 	if (state != connection_state::VALID)
 		return state;
 
-	const auto this_port = _out_ports[this_out].get();
-	const auto other_port = other->_in_ports[other_in].get();
-
 	if(_output_connections[this_out].size() == 0)
 		return connection_state::ERR_PORT_NOT_CONNECTED;
+
+	const auto other_port = other->_in_ports[other_in].get();
 
 	auto& inputs = _output_connections[this_out];
 	inputs.erase(std::remove(inputs.begin(), inputs.end(), other_port), inputs.end());
 
-	this_port->set_connected(false);
 	other_port->set_connected(false);
 	return connection_state::NOT_CONNECTED;
 }
