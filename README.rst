@@ -3,6 +3,7 @@ mbd
 
 
 C++ Model Based Development/Engineering Library 
+-----------------------------------------------
 
 - fast: Design with 6 models executed 10.000.000 ticks in 2.3 sec on Raspberry Pi 3, 0.18 sec on Windows 10 and 0.18 sec on Debian VM.
 - easy to use: must implement only 2 methods: build() and update()  in which you call add_input/add_output and get_input/set_output. 

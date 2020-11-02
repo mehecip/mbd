@@ -30,6 +30,9 @@ bool controller::connect(const std::string& out_model, std::uint64_t out_idx, co
 
 bool controller::excution_order()
 {
+	_arithmetic_loop.clear();
+	_priority_vect.clear();
+	
 	{
 		prio_map_t prio_map;
 		std::queue<std::string> q;
@@ -49,9 +52,6 @@ bool controller::excution_order()
 		// set a maximum number of loops to be able to break in case of an arithmetic loop
 		// max complexity V * V
 		std::size_t loops = _models.size() * _models.size();
-
-
-		bool arithmetic_loop = false;
 
 		// bfs 
 		while (!q.empty())
