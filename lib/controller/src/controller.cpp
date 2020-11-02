@@ -50,9 +50,6 @@ bool controller::excution_order()
 		// max complexity V * V
 		std::size_t loops = _models.size() * _models.size();
 
-
-		bool arithmetic_loop = false;
-
 		// bfs 
 		while (!q.empty())
 		{
