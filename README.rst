@@ -118,6 +118,11 @@ Create the controller:
 
 	#include "controller.hpp"
 	
+	void message_callback(log_level lvl, const std::string& msg)
+	{
+		std::cout << level_info(lvl) << ": " << msg << "\n";
+	}
+	
 	mbd::controller cntrl(message_callback);
 
 Register the models:
