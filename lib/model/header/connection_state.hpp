@@ -21,12 +21,11 @@ enum class connection_state : std::uint8_t
 	ERR_OUT_PORT_INVALID,
 	ERR_IN_PORT_CONNECTED,
 	ERR_PORT_NOT_CONNECTED
-
 };
 
 const inline std::string connection_info(connection_state state)
 {
-	const std::unordered_map<connection_state, std::string, enum_class_hash> info =
+	std::unordered_map<connection_state, std::string, enum_class_hash> info =
 	{
 		{connection_state::VALID, "Valid connection"},
 		{connection_state::INVALID, "Invalid connection"},
@@ -38,7 +37,7 @@ const inline std::string connection_info(connection_state state)
 		{connection_state::ERR_IN_PORT_INVALID, "Error input port index is invalid"},
 		{connection_state::ERR_OUT_PORT_INVALID, "Error output port index is invalid"},
 		{connection_state::ERR_IN_PORT_CONNECTED, "Error input port is already connected"},
-		{connection_state::ERR_PORT_NOT_CONNECTED, "Error ouput port had no connections"}		
+		{connection_state::ERR_PORT_NOT_CONNECTED, "Error ouput port had no connections"}
 	};
 
 	return info.at(state);

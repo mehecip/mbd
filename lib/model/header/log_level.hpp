@@ -7,7 +7,7 @@
 
 namespace mbd
 {
-	
+
 enum class log_level : std::uint8_t
 {
 	DEBUG = 0,

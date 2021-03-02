@@ -18,10 +18,13 @@ struct data_type_wrapper : public i_data_type
 	data_type_wrapper(T data) : _data(data) {};
 	T _data;
 
-	const std::type_index get_type() const override
-	{
-		return typeid(T);
-	}
+	const std::type_index get_type() const override;
 };
+
+template<typename T>
+inline const std::type_index data_type_wrapper<T>::get_type() const
+{
+	return typeid(T);
+}
 
 } // namespace mbd

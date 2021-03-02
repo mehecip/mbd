@@ -11,7 +11,7 @@ const std::string& model::get_name() const
 
 bool model::connect(std::uint64_t this_out, const model_ptr_t& other, std::uint64_t other_in)
 {
-	connection_state state = _node->connect(this_out, other->_node, other_in);
+	const connection_state state = _node->connect(this_out, other->_node, other_in);
 
 	const std::string status = "Connecting '" + _name + "' [out port '" + std::to_string(this_out) + "'] to '" + other->get_name() + "' [in port '" + std::to_string(other_in) + "']";
 	log_connection_state(connection_state::CONNECTED, state, status);
@@ -21,7 +21,7 @@ bool model::connect(std::uint64_t this_out, const model_ptr_t& other, std::uint6
 
 bool model::disconnect(std::uint64_t this_out, const model_ptr_t& other, std::uint64_t other_in)
 {
-	connection_state state = _node->disconnect(this_out, other->_node, other_in);
+	const connection_state state = _node->disconnect(this_out, other->_node, other_in);
 
 	const std::string status = "Disconnecting '" + _name + "' [out port '" + std::to_string(this_out) + "'] from '" + other->get_name() + "' [in port '" + std::to_string(other_in) + "']";
 	log_connection_state(connection_state::NOT_CONNECTED, state, status);

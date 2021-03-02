@@ -28,7 +28,6 @@ const std::type_index port::get_data_type() const
 	return _data->get_type();
 }
 
-
 void port::set_connected(bool flag)
 {
 	_connected = flag;
