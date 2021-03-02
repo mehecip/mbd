@@ -80,7 +80,7 @@ void controller_example()
 	cntrl.register_model<gain_d_t>("Gain", 2.0);
 
 
-	std::cout << "Creating and registring durration: " << t.elapsed_microsec() << " microseconds." << std::endl;
+	std::cout << "\nCreating and registring duration: " << t.elapsed_microsec() << " microseconds. \n\n";
 
 	t.reset();
 
@@ -90,23 +90,23 @@ void controller_example()
 	cntrl.connect("Sum", 0, "Gain", 0);
 	cntrl.connect("Gain", 0, "Sink", 0);
 
-	std::cout << "Connecting durration: " << t.elapsed_microsec() << " microseconds. " << std::endl;
+	std::cout << "\nConnecting duration: " << t.elapsed_microsec() << " microseconds. \n\n";
 
 	t.reset();
 
 	cntrl.excution_order();
 
-	std::cout << "Execution order: " << t.elapsed_microsec() << " microseconds. " << std::endl;
+	std::cout << "\nExecution order: " << t.elapsed_microsec() << " microseconds. \n\n";
 
 	t.reset();
 
-	std::uint64_t ticks = 10'000'000;
+	std::uint64_t ticks = 100'000'000;
 	cntrl.run(ticks);
 
-	std::cout << ticks << " ticks executed in " << t.elapsed_sec() << " seconds. Average tick duration " << t.elapsed_microsec() / ticks << " microseconds." << std::endl;
+	std::cout << ticks << " ticks executed in " << t.elapsed_sec() << " seconds. Average tick duration " << t.elapsed_microsec() / ticks << " microseconds. \n";
 
 	auto sink_ = cntrl.get<sink_d_t>("Sink");
-	std::cout << "Sink Value after execution: " << sink_->read() << "\n\n";
+	std::cout << "\nSink Value after execution: " << sink_->read() << "\n\n";
 }
 
 #endif
