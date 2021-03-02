@@ -6,6 +6,8 @@
 #include <string>
 #include <functional>
 
+#include "graph.hpp"
+
 #include "model.hpp"
 
 namespace mbd
@@ -56,16 +58,13 @@ private:
 	msg_callback_f _callback_f;
 
 	model_map_t _models;
-	conn_map_t _descendents, _ancestors;
+
+	mbd::prio_graph<std::string> _graph;
 
 	// the index is the prio at which to call update()
 	// the values are all the obj that need to be updated at that time
 	std::vector<std::vector<model*>> _priority_vect;
 	std::vector<std::string> _arithmetic_loop;
-
-	// sets the prio for comp as:
-	// P[comp] = max(P[Ancestor 1], P[Ancestor 2], ... , P[Ancestor N]) + 1
-	void update_prio_map(const std::string& comp, prio_map_t& prio_map);
 
 	// stores the final priority in _priority_vect since it will be in the order of priorities, so more efficient to iterate over
 	void add_to_prio_vect(const prio_map_t& prio_map);

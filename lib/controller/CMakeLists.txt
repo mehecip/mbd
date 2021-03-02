@@ -8,6 +8,7 @@ set(CPP_FILES
 
 set(HPP_FILES
   header/controller.hpp
+  header/graph.hpp
 )
 
 add_library( controller 
@@ -36,7 +37,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
 endif()
 
-set_target_properties(model
+set_target_properties(controller
   PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
 )
