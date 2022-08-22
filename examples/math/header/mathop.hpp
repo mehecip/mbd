@@ -11,13 +11,10 @@ class mathop
 	: public model
 {
 public:
-	mathop(const std::string& name) : model(name) {}
-
-	void build() override
+	mathop(const std::string& name) : model(name)
 	{
 		add_input<T>(_name + "_In1", T{});
 		add_input<T>(_name + "_In2", T{});
-
 		add_output<T>(_name + "_Out1", T{});
 	}
 

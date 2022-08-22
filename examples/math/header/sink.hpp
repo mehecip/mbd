@@ -11,9 +11,7 @@ class sink
 	: public model
 {
 public:
-	sink(const std::string& name) : model(name) {}
-
-	void build() override
+	sink(const std::string& name) : model(name) 
 	{
 		model::add_input<T>(model::_name + "_In", T{});
 	}

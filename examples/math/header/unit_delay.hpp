@@ -11,9 +11,7 @@ class unit_delay
 	: public model
 {
 public:
-	unit_delay(const std::string& name, T init_val = T{}) : model(name), _value(init_val) {};
-
-	void build() override
+	unit_delay(const std::string& name, T init_val = T{}) : model(name), _value(init_val)
 	{
 		add_input<T>(_name + "_IN", _value);
 		add_output<T>(_name + "_OUT", _value);
@@ -36,6 +34,8 @@ public:
 	}
 
 private:
+	// if a parameter does not need to be added to the view
+	// it does not need to be added to add_param
 	T _value;
 };
 

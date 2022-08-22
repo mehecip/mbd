@@ -83,7 +83,6 @@ inline void controller::register_model(const std::string& name, Args&&... args)
 {
 	auto c = std::make_unique<M>(name, std::forward<Args>(args)...);
 	c->add_msg_callback(_callback_f);
-	c->build();
 
 	_models[name] = std::move(c);
 }

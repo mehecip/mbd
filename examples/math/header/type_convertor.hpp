@@ -18,9 +18,7 @@ private:
 	bool _overflow;
 
 public:
-	type_convertor(const std::string& name) : model(name), _overflow(false) {}
-
-	void build() override
+	type_convertor(const std::string& name) : model(name), _overflow(false) 	
 	{
 		add_input<IN>(_name + "_IN", IN{});
 		add_output<OUT>(_name + "_OUT", OUT{});

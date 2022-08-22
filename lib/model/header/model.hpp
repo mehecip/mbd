@@ -18,11 +18,9 @@ public:
 	using ptr_t = std::unique_ptr<model>;
 
 public:
-	model(const std::string& n);
 
-	// called when building
-	// use to add inpus/outputs to your model
-	virtual void build() = 0;
+	// must be used to add inpus/outputs to your model
+	model(const std::string& n);
 
 	// called when executing
 	virtual void update(std::uint64_t tick) = 0;
