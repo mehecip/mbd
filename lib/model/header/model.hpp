@@ -47,50 +47,7 @@ protected:
 	std::string _name;
 	std::string _validator_msg;
 
-	// // for build() you would like to add inputs/outputs
-	// template<typename T>
-	// void add_input(const std::string& name, const T& init_data);
-
-	// template<typename T>
-	// void add_output(const std::string& name, const T& init_data);
-
-	// // for update() you would like to put/get data
-	// template<typename T>
-	// const T& get_input(std::uint64_t index) const;
-
-	// template<typename T>
-	// void set_output(std::uint64_t index, const T& data) const;
-
 private:
-	// node is type which holds the ports and manages their connections and data
-	// e.g. another layer of abstraction between the model and ports
-	// mbd::node _node;
-
 	void log_connection_state(connection_state expected, connection_state current, const std::string& status);
 };
-
-// template<typename T>
-// inline void model::add_input(const std::string& name, const T& init_data)
-// {
-// 	_node.add_input<T>(name, init_data);
-// }
-
-// template<typename T>
-// inline void model::add_output(const std::string& name, const T& init_data)
-// {
-// 	_node.add_output<T>(name, init_data);
-// }
-
-// template<typename T>
-// inline const T& model::get_input(std::uint64_t index) const
-// {
-// 	return _node.get_input<T>(index);
-// }
-
-// template<typename T>
-// inline void model::set_output(std::uint64_t index, const T& data) const
-// {
-// 	_node.set_output<T>(index, data);
-// }
-
 } // namespace mbd

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <cstdint>
-#include <memory>
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
@@ -15,13 +14,15 @@ namespace mbd
 
 struct node
 {
-public:
 	node() = default;
 	~node() = default;
 
 	connection_state connect(std::uint64_t this_out, node* const other, std::uint64_t other_in);
 
 	connection_state disconnect(std::uint64_t this_out, node* const other, std::uint64_t other_in);
+
+	std::vector<port> _in_ports, _out_ports;
+	std::unordered_map<std::string, param> _params;
 
 protected:
 	template<typename T>
@@ -46,9 +47,6 @@ protected:
 	void set_param(const std::string& name, const T& val);
 
 private:
-	std::vector<port> _in_ports, _out_ports;
-	std::unordered_map<std::string, param> _params;
-
 	// index represents the output port index and value is a vector of all connections from that port
 	std::vector<std::vector<port*>> _output_connections;
 
