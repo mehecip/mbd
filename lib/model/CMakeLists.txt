@@ -7,6 +7,8 @@ set(CPP_FILES
   src/model.cpp
   src/node.cpp
   src/port.cpp
+  src/param.cpp
+  src/data_holder.cpp
 )
 
 set(HPP_FILES
@@ -15,6 +17,8 @@ set(HPP_FILES
   header/model.hpp
   header/node.hpp
   header/port.hpp
+  header/param.hpp
+  header/data_holder.hpp
   header/log_level.hpp
   header/connection_state.hpp
   header/enum_hash.hpp

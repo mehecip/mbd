@@ -10,7 +10,7 @@
 
 namespace mbd
 {
-using model_map_t = std::unordered_map<std::string, model_ptr_t> ;
+using model_map_t = std::unordered_map<std::string, model::ptr_t> ;
 
 using conn_map_t = std::unordered_map<std::string, std::vector<std::string>>;
 using prio_map_t = std::unordered_map<std::string, std::uint64_t>;

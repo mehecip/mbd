@@ -72,7 +72,10 @@ void controller_example()
 
 	mbd::controller cntrl(message_callback);
 
-	cntrl.register_model<const_src_d_t>("Constant Source", 10'000.0, -100.0, 10'001);
+	cntrl.register_model<const_src_d_t>("Constant Source", 10'000.0, 10'001);
+	auto src = cntrl.get<const_src_d_t>("Constant Source");
+	src->set_value(-100.0);
+
 	cntrl.register_model<lin_src_f_t>("Liniar Source", -3.1415926f, 0.001f, 0);
 	cntrl.register_model<type_conv_f_to_d_t>("Converter");
 	cntrl.register_model<add_d_t>("Sum");
@@ -121,7 +124,7 @@ void example()
 	std::uint64_t csrc_step_tick = 1000ull;
 	double csrc_val = 1'000.0;
 	double csrc_init_val = 0.0;
-	std::unique_ptr<model> csrc = std::make_unique<const_source<double>>("Constant Source", csrc_val, csrc_init_val, csrc_step_tick);
+	auto csrc = std::make_unique<const_source<double>>("Constant Source", csrc_init_val, csrc_step_tick);
 	csrc->add_msg_callback(message_callback);
 
 	float lsrc_init_val = -110.0f;
@@ -146,6 +149,8 @@ void example()
 	/****************** BUILD ******************/
 
 	csrc->build();
+	csrc->set_value(csrc_val);
+	
 	lsrc->build();
 	sum->build();
 	gain_->build();

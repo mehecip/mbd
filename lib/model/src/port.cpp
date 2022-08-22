@@ -1,11 +1,15 @@
 #include "port.hpp"
-#include "data_type.hpp"
+#include "data_holder.hpp"
+
 
 namespace mbd
 {
-
 port::port(const std::string& name, port_dir_t d) 
-	: _dir(d), _connected(false), _name(name), _data(nullptr)
+	: data_holder(), _dir(d), _connected(false), _name(name)
+{}
+
+port::port(port &&other) noexcept 
+	: data_holder(std::move(other)), _name(std::move(other._name)), _dir(other._dir), _connected(other._connected)
 {}
 
 const port_dir_t port::get_dir() const
@@ -22,12 +26,6 @@ const std::string& port::get_name() const
 {
 	return _name;
 }
-
-const std::type_index port::get_data_type() const
-{
-	return _data->get_type();
-}
-
 
 void port::set_connected(bool flag)
 {
