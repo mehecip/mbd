@@ -9,6 +9,7 @@ set(CPP_FILES
   src/port.cpp
   src/param.cpp
   src/data_holder.cpp
+  src/uuid.cpp
 )
 
 set(HPP_FILES
@@ -22,6 +23,7 @@ set(HPP_FILES
   header/log_level.hpp
   header/connection_state.hpp
   header/enum_hash.hpp
+  header/uuid.hpp
 )
 
 add_library( model 
@@ -34,13 +36,13 @@ include_directories(header)
 target_link_libraries(model)
 
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	set(CMAKE_CXX_FLAGS "-std=c++14 -O3")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+else()
+	set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
 endif()
 
 set_target_properties(model

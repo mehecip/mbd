@@ -4,10 +4,13 @@ project(controller CXX)
 
 set(CPP_FILES
   src/controller.cpp
+  src/library.cpp
 )
 
 set(HPP_FILES
   header/controller.hpp
+  header/iview_adapter.hpp
+  header/library.hpp
 )
 
 add_library( controller 
@@ -27,13 +30,13 @@ target_link_libraries(controller
 )
 
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	set(CMAKE_CXX_FLAGS "-std=c++14 -O3")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+else()
+	set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
 endif()
 
 set_target_properties(model

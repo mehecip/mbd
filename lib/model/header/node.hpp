@@ -7,6 +7,7 @@
 
 #include "port.hpp"
 #include "param.hpp"
+#include "uuid.hpp"
 #include "connection_state.hpp"
 
 namespace mbd
@@ -14,13 +15,14 @@ namespace mbd
 
 struct node
 {
-	node() = default;
+	node(mbd::uuid uuid = mbd::uuid("not unique"));
 	~node() = default;
 
 	connection_state connect(std::uint64_t this_out, node* const other, std::uint64_t other_in);
 
 	connection_state disconnect(std::uint64_t this_out, node* const other, std::uint64_t other_in);
 
+	const mbd::uuid _uuid;
 	std::vector<port> _in_ports, _out_ports;
 	std::unordered_map<std::string, param> _params;
 

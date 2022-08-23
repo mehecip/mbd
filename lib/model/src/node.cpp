@@ -3,6 +3,8 @@
 namespace mbd
 {
 
+node::node(mbd::uuid uuid) : _uuid(uuid) {};
+
 connection_state node::connect(std::uint64_t this_out, node* const other, std::uint64_t other_in)
 {
 	connection_state state = validate(this_out, other, other_in);
