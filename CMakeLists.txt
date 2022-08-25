@@ -13,8 +13,7 @@ endif()
 # examples
 option(BUILD_EXAMPLES "Build Examples" ON)
 if(BUILD_EXAMPLES)
-	add_subdirectory(examples/math)	
-  add_subdirectory(examples/js_view_adapter)	
+	add_subdirectory(examples/math)
 endif()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
