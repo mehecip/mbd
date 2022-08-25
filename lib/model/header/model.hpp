@@ -12,7 +12,7 @@ namespace mbd
 {
 
 class model 
-	: public msg_dispatcher, node
+	: public msg_dispatcher, public node
 {
 public:
 	using ptr_t = std::unique_ptr<model>;
