@@ -1,39 +1,41 @@
 #pragma once
-#include <string>
 #include "data_holder.hpp"
+#include <string>
 
 namespace mbd
 {
 
-	enum class port_dir_t : bool
-	{
-		IN = 0,
-		OUT = 1
-	};
+enum class port_dir_t : bool
+{
+  IN = 0,
+  OUT = 1
+};
 
-	class port : public data_holder
-	{
-	public:
-		port(const std::string &name, port_dir_t d);
-		port(port &&other) noexcept;
+class port : public data_holder
+{
+public:
+  port(const std::string &name, port_dir_t d);
+  port(port &&other) noexcept;
 
-		~port() = default;
+  bool operator==(const port &other) const;
 
-		const port_dir_t get_dir() const;
+  ~port() = default;
 
-		void set_name(const std::string &name);
+  const port_dir_t get_dir() const;
 
-		void set_connected(bool flag);
+  void set_name(const std::string &name);
 
-		bool is_connected() const;
+  void set_connected(bool flag);
 
-		const std::string &get_name() const;
+  bool is_connected() const;
 
-	private:
-		const port_dir_t _dir;
-		bool _connected;
+  const std::string &get_name() const;
 
-		std::string _name;
-	};
+private:
+  const port_dir_t _dir;
+  bool _connected;
+
+  std::string _name;
+};
 
 } // namespace mbd

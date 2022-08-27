@@ -5,19 +5,19 @@
 
 namespace mbd
 {
-	class param : public data_holder
-	{
-	public:
-		param(const std::string &name);
-		param(param &&other) noexcept;
+class param : public data_holder
+{
+public:
+  param(const std::string &name);
+  param(param &&other) noexcept;
 
-		~param() = default;
+  ~param() = default;
 
-		void set_name(const std::string &name);
-		const std::string &get_name() const;
+  void set_name(const std::string &name);
+  const std::string &get_name() const;
 
-	private:
-		std::string _name;
-	};
+private:
+  std::string _name;
+};
 
 } // namespace mbd

@@ -4,15 +4,9 @@
 
 namespace mbd
 {
-    uuid::uuid(const std::string &str) : _uuid(str){};
+uuid::uuid(const std::string &str) : _uuid(str){};
 
-    bool uuid::operator==(uuid &other) const
-    {
-        return _uuid == other._uuid;
-    }
+bool uuid::operator==(uuid &other) const { return _uuid == other._uuid; }
 
-    const std::string &uuid::to_string() const
-    {
-        return _uuid;
-    }
-}
+const std::string &uuid::to_string() const { return _uuid; }
+} // namespace mbd

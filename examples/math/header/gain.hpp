@@ -11,7 +11,7 @@ class gain
 	: public model
 {
 public:
-	gain(const std::string& name, T gain) : model(name), _zero(T{}) 
+	gain(const std::string& name, T gain = {}) : model(name), _zero(T{}) 
 	{
 		model::add_input<T>(model::_name + "_In1", T{});
 		model::add_output<T>(model::_name + "_Out1", T{});
@@ -22,14 +22,14 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		const T in = model::get_input<T>(0);
-		const T gain = model::get_param<T>(_gain);
+		const T& in = model::get_input<T>(0);
+		const T& gain = model::get_param<T>(_gain);
 
-		const T out = in * gain;
+		const T& out = in * gain;
 		
 		check_overflow(in, out, gain);
 
-		model::set_output<T>(0, std::move(out));
+		model::set_output<T>(0, out);
 	}
 
 	bool is_feedthrough() const override
@@ -39,7 +39,7 @@ public:
 
 	bool has_overflown() const
 	{
-		return model::get_param<T>(_overflow);
+		return model::get_param<bool>(_overflow);
 	}
 
 private:

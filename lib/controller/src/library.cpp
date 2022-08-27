@@ -4,21 +4,25 @@
 namespace mbd
 {
 
-    lib::lib(const std::string &name) : _name(name) {}
+lib::lib(const std::string &name) : _name(name) {}
 
-    model::ptr_t lib::build(const std::string &name) const
-    {
-        const auto &factory = _factories.find(name);
+model::ptr_t lib::build_model(const std::string &name) const
+{
+  const auto &it = _factories.find(name);
+  if (it != _factories.end())
+  {
+    const auto &factory = it->second;
+    return factory();
+  }
 
-        if (factory != _factories.end())
-            return factory->second(name);
-
-        return nullptr;
-    }
-
-    const std::vector<std::string> &lib::get_model_names() const
-    {
-        return _model_names;
-    }
-
+  return nullptr;
 }
+
+const std::vector<std::string> &lib::get_model_names() const
+{
+  return _model_names;
+}
+
+const std::string &lib::get_name() const { return _name; }
+
+} // namespace mbd

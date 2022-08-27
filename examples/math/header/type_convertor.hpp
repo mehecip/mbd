@@ -52,7 +52,7 @@ private:
 	template<typename I = IN, typename O = OUT>
 	constexpr is_not_same_t<I, O> convert()
 	{
-		const I in = get_input<I>(0);
+		const I& in = get_input<I>(0);
 		set_output<O>(0, static_cast<O>(in));
 	}
 };

@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include <chrono>
+#include <utility>
 
 using namespace mbd;
 using namespace mbd::impl;
@@ -108,6 +109,8 @@ void controller_example()
 
 	auto sink_ = cntrl.get<sink_d_t>("Sink");
 	std::cout << "Sink Value after execution: " << sink_->read() << "\n\n";
+
+	cntrl.disconnect("Constant Source", 0, "Sum", 0);
 }
 
 #endif
@@ -146,13 +149,30 @@ void example()
 
 
 	/****************** CONNECT ******************/
+	end_point csrc_0{csrc.get(), 0, port_dir_t::OUT};
+	end_point sum_0{sum.get(), 0, port_dir_t::IN};
 
-	csrc->connect(0, sum, 0);
-	lsrc->connect(0, type_conv, 0);
-	type_conv->connect(0, sum, 1);
-	sum->connect(0, gain_, 0);
-	gain_->connect(0, sink_, 0);
+	auto [s1, csrc_sum] = connection::build(csrc_0, sum_0);
 
+	end_point lsrc_0{lsrc.get(), 0, port_dir_t::OUT};
+	end_point type_conv_0{type_conv.get(), 0, port_dir_t::IN};
+
+	auto [s2, lsrc_type_conv] = connection::build(lsrc_0, type_conv_0);
+
+	end_point type_conv_o_0{type_conv.get(), 0, port_dir_t::OUT};
+	end_point sum_1{sum.get(), 1, port_dir_t::IN};
+
+	auto [s3, type_conv_sum] = connection::build(type_conv_o_0, sum_1);
+
+	end_point sum_o_0{sum.get(), 0, port_dir_t::OUT};
+	end_point gain_0{gain_.get(), 0, port_dir_t::IN};
+
+	auto [s4, sum_gain] = connection::build(sum_o_0, gain_0);
+
+	end_point gain_o_0{gain_.get(), 0, port_dir_t::OUT};
+	end_point sync_0{sink_.get(), 0, port_dir_t::IN};
+
+	auto [s5, gain_sync] = connection::build(gain_o_0, sync_0);
 
 	/****************** EXECUTE ******************/
 	// exacution order is:
@@ -203,7 +223,7 @@ int main()
 	std::cout << "\n\n\n\n";
 
 
-	example();
+	 example();
 
 #if BUILD_CONTROLLER_EXAMPLES
 	controller_example();

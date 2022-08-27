@@ -36,8 +36,8 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		const T in1 = model::get_input<T>(0);
-		const T in2 = model::get_input<T>(1);
+		const T& in1 = model::get_input<T>(0);
+		const T& in2 = model::get_input<T>(1);
 
 		model::set_output<T>(0, T{ in1 + in2 });
 	}
@@ -52,8 +52,8 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		const T in1 = model::get_input<T>(0);
-		const T in2 = model::get_input<T>(1);
+		const T& in1 = model::get_input<T>(0);
+		const T& in2 = model::get_input<T>(1);
 
 		model::set_output<T>(0, T{ in1 - in2 });
 	}
@@ -67,8 +67,8 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		auto in1 = model::get_input<T>(0);
-		auto in2 = model::get_input<T>(1);
+		const auto& in1 = model::get_input<T>(0);
+		const auto& in2 = model::get_input<T>(1);
 
 		if (in2 != T{ 0 })
 			model::set_output<T>(0, T{ in1 / in2 });
@@ -85,8 +85,8 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		auto in1 = model::get_input<T>(0);
-		auto in2 = model::get_input<T>(1);
+		const auto& in1 = model::get_input<T>(0);
+		const auto& in2 = model::get_input<T>(1);
 
 		model::set_output<T>(0, T{ in1 % in2 });
 	}
@@ -100,8 +100,8 @@ public:
 
 	void update(std::uint64_t tick) override
 	{
-		auto in1 = model::get_input<T>(0);
-		auto in2 = model::get_input<T>(1);
+		const auto& in1 = model::get_input<T>(0);
+		const auto& in2 = model::get_input<T>(1);
 
 		model::set_output<T>(0, T{ in1 * in2 });
 	}

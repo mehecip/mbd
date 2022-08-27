@@ -33,10 +33,18 @@ target_link_libraries(controller
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+	else()
+		set(CMAKE_CXX_FLAGS "-std=c++17 -g3")
+	endif()
 else()
-	set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+	else()
+		set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
+	endif()
 endif()
 
 set_target_properties(model
