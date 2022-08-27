@@ -81,14 +81,13 @@ Connect:
 
 .. code:: C++
 
-	csrc->connect(0, sum_, 0);
+	end_point csrc_0{csrc.get(), 0, port_dir_t::OUT};
+	end_point sum_0{sum.get(), 0, port_dir_t::IN};
 
-	lsrc->connect(0, sum_, 1);
-	
-	sum_->connect(0, sink_, 0);
+	auto [s1, csrc_sum] = connection::build(csrc_0, sum_0);
 
 	/**************************************************************
-	| Constant Source |0>-------->0|     |
+		| Constant Source |0>-------->0|     |
                                        | Sum |0>------->0| Sink |
           | Liniar Source |0>-------->1|     |
 	***************************************************************/
