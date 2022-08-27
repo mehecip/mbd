@@ -20,13 +20,13 @@ node::node(const std::string &name, mbd::uuid uuid)
 
 void node::connect(port *this_out, port *other_in)
 {
-  const auto idx = get_index(_out_ports, other_in);
+  const auto idx = get_index(_out_ports, this_out);
   _output_connections[idx].push_back(other_in);
 }
 
 void node::disconnect(port *this_out, port *other_in)
 {
-  const auto idx = get_index(_out_ports, other_in);
+  const auto idx = get_index(_out_ports, this_out);
 
   auto &ports = _output_connections[idx];
   const auto o_it = std::find(ports.cbegin(), ports.cend(), other_in);
