@@ -5,12 +5,16 @@ project(controller CXX)
 set(CPP_FILES
   src/controller.cpp
   src/library.cpp
+  src/graph.cpp
+  src/dfs.cpp
 )
 
 set(HPP_FILES
   header/controller.hpp
   header/iview_adapter.hpp
   header/library.hpp
+  header/graph.hpp
+  header/dfs.hpp
 )
 
 add_library( controller 
@@ -35,13 +39,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-		set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+		set(CMAKE_CXX_FLAGS "/std:c++17 /O2 /Ob2 /EHsc")
 	else()
-		set(CMAKE_CXX_FLAGS "-std=c++17 -g3")
+		set(CMAKE_CXX_FLAGS "-std=c++17 -g3 -O0")
 	endif()
 else()
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-		set(CMAKE_CXX_FLAGS "/O2 /Ob2 /EHsc")
+		set(CMAKE_CXX_FLAGS "/std:c++17 /O2 /Ob2 /EHsc")
 	else()
 		set(CMAKE_CXX_FLAGS "-std=c++17 -O3")
 	endif()
