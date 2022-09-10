@@ -31,6 +31,10 @@ public:
   const T &read_data() const;
 
 private:
+  // mbd::connection changes the input port data pointer to the output port data
+  // pointer so that the connection is made
+  friend class connection;
+
   i_data_type::ptr_t _data;
 };
 

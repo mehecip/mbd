@@ -3,6 +3,7 @@
 #include "data_type.hpp"
 #include "model.hpp"
 #include "port.hpp"
+#include <cstddef>
 
 namespace mbd
 {
@@ -28,22 +29,30 @@ connection::build_ret_t connection::build(const end_point &from,
 connection::connection(const end_point &from, const end_point &to)
     : _from(from), _to(to)
 {
-  // make the connection in the from._model, so that it writes to the to._port
-  // if we do this, the connection does not need to be updated
-  // the from._model will directly write to the to._port and update it
-  _from._model->connect(_from._port, _to._port);
-
   // set the to._port connected flag
   _to._port->set_connected(true);
+
+  // Connecting 2 ports boils down to making sure that both point to the same
+  // memory location. By doing this, the connection itself does not need to be
+  // updated, nor the data moved between the ports from the outside.
+
+  _data_ptr = nullptr;
+  
+  // store the input port data pointer in _data_ptr
+  std::swap(_data_ptr, _to._port->_data);
+
+  // set the input port data pointer to the output port data pointer
+  _to._port->_data = _from._port->_data;
 }
 
 connection::~connection()
 {
-  // disconnect from node, so that it stops writing to the to._port
-  _from._model->disconnect(_from._port, _to._port);
-
   // reset the to._port connected flag
   _to._port->set_connected(false);
+
+  // set the input port data pointer to the old input port data pointer
+  _to._port->_data = nullptr;
+  std::swap(_data_ptr, _to._port->_data);
 }
 
 bool connection::operator==(const std::pair<end_point, end_point> &other) const

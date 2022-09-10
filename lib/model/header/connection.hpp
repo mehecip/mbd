@@ -44,6 +44,7 @@ public:
 
 private:
   end_point _from, _to;
+  i_data_type::ptr_t _data_ptr;
 };
 
 } // namespace mbd

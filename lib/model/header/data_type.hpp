@@ -8,7 +8,7 @@ namespace mbd
 
 struct i_data_type
 {
-  using ptr_t = std::unique_ptr<i_data_type>;
+  using ptr_t = std::shared_ptr<i_data_type>;
 
   virtual ~i_data_type(){};
   virtual const std::type_index get_type() const = 0;

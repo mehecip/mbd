@@ -19,9 +19,6 @@ struct node
   node(const std::string &name, mbd::uuid uuid = mbd::uuid());
   ~node() = default;
 
-  void connect(port *this_out, port *other_in);
-  void disconnect(port *this_out, port *other_in);
-
   const mbd::uuid _uuid;
   std::string _name;
 
@@ -59,16 +56,10 @@ private:
 
 /**************************************************PORTS********************************************************/
 
-// setting an ouput basically means that we have to write to the input ports we
-// are connected to so actually writing data on this ouput can be avoided to
-// gain some performance
 template <typename T>
 inline void node::set_output(std::uint64_t index, const T &data) const
 {
-  const auto &inputs = _output_connections[index];
-  std::for_each(inputs.begin(), inputs.end(), [&](const auto &input) {
-    input->template write_data<T>(data);
-  });
+  _out_ports[index].write_data<T>(data);
 }
 
 template <typename T>
