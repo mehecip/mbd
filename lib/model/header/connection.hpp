@@ -13,15 +13,15 @@
 namespace mbd
 {
 
-class node; // fwd
+class model; // fwd
 
 struct end_point
 {
-  node *_node;
+  model *_model;
   port *_port;
 
-  end_point(node *n, port *p);
-  end_point(node *n, std::uint64_t p, port_dir_t dir);
+  end_point(model *n, port *p);
+  end_point(model *n, std::uint64_t p, port_dir_t dir);
 
   bool operator==(const end_point &other) const;
 };
@@ -31,6 +31,7 @@ class connection
 public:
   using ptr_t = std::unique_ptr<connection>;
   using build_ret_t = std::pair<connection_state, ptr_t>;
+  using nodes_t = std::pair<model *, model *>;
 
   static build_ret_t build(const end_point &from, const end_point &to);
 
@@ -38,6 +39,8 @@ public:
   ~connection();
 
   bool operator==(const std::pair<end_point, end_point> &other) const;
+
+  nodes_t get_models() const{ return {_from._model, _to._model}; }
 
 private:
   end_point _from, _to;
