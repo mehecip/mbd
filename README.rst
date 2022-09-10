@@ -125,9 +125,9 @@ Add the models:
 
 	cntrl.add_library(my_lib);
 
-	cntrl.add_model(my_lib->get_name(), "Times Pi");
-	cntrl.add_model(my_lib->get_name(), "Liniar Source");
-	cntrl.add_model(my_lib->get_name(), "Sink");
+	cntrl.add_model("My Lib", "Times Pi");
+	cntrl.add_model("My Lib", "Liniar Source");
+	cntrl.add_model("My Lib", "Sink");
 	
 Connect the models:
 
