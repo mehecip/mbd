@@ -5,8 +5,8 @@ mbd
 C++ Model Based Development/Engineering Library 
 -----------------------------------------------
 
-- fast: Design with 6 models executed 10.000.000 ticks in 2.3 sec on Raspberry Pi 3, 0.18 sec on Windows 10 and 0.18 sec on Debian VM.
-- easy to use: must implement only 2 methods: build() and update()  in which you call add_input/add_output and get_input/set_output. 
+- fast: Design with 7 models executed 10.000.000 ticks in 1.55 sec on Ubuntu.
+- easy to use: must implement only 2 methods: update() and is_feedthrough() in which you call add_input/add_output and get_input/set_output. 
 - portable: Tested on Windows 10(Visual Studio 2019), Debian VM(GCC 8.3) and Raspbian(GCC 4.9).
 - syncronous and asyncronous execution(based on execution order) available with the controller.
 
@@ -31,78 +31,73 @@ Implement:
 
 	#include "model.hpp"
 
-	template <typename T>
-	class sum
-		: public model /* inherit from mbd::model class */
+	class gain : public model
 	{
-
 	public:
 
-		/* override build() to add the inputs and outputs */
-		void build() override
+		/** Build your model: add inputs, outputs and parameters. */
+		gain(const std::string& name, double gain) : model(name)
 		{
-			model::add_input<T>("Input 1", T{});
-			model::add_input<T>("Input 2", T{});
+			model::add_input<double>("In 0", 0.0);
+			model::add_output<double>("Out 0", 0.0);
 
-			model::add_output<T>("Output", T{});
+			model::add_param<double>("gain_factor", gain);
 		}
-		
-		/* override update() to implement the logic */
+
+		/** Update your model: read inputs/parameters and set outputs/parameters. */
 		void update(std::uint64_t tick) override
 		{
-			const T in1 = model::get_input<T>(0);
-			const T in2 = model::get_input<T>(1);
-
-			model::set_output<T>(0, T{ in1 + in2 });
+			const double in = model::get_input<double>(0);
+			const double gain = model::get_param<double>("gain_factor");
+			
+			model::set_output<double>(0, in * gain);
 		}
-		
-		sum(const std::string& name) : model(name) {}
-	}
+
+		/** Let the controller know if the model behaves as a source. */
+		bool is_feedthrough() const override
+		{
+			return true;
+		}
+	};
 	
+
+Register:
+
+.. code:: C++
+
+	mbd::lib my_lib("My Lib");
+	my_lib.register_model<gain>("Times Pi", 3.1415);
 
 Build:
 
 .. code:: C++
 
-	auto csrc = std::make_unique<const_source<double>>("Constant Source", 10.0, 0.0, 0);
-	csrc->build();
-	
-	auto lsrc = std::make_unique<liniar_source<double>>("Liniar Source", 0.0, -0.1, 0);
-	lsrc->build();
-	
-	auto sum_ = std::make_unique<sum<double>>("Sum");
-	sum_->build();
-	
-	auto sink_ = std::make_unique<sink_<double>>("Sink");
-	sink_->build();
-	
+	auto gain_ = my_lib.build_model("Times Pi");
+	auto src_ = my_lib.build_model("Liniar Source");
+	auto sink_ = my_lib.build_model("Sink");
+
 	
 Connect:
 
 .. code:: C++
 
-	end_point csrc_0{csrc.get(), 0, port_dir_t::OUT};
-	end_point sum_0{sum.get(), 0, port_dir_t::IN};
+	mbd::end_point src_0{src_.get(), 0, port_dir_t::OUT};
+	mbd::end_point gain_0{gain_.get(), 0, port_dir_t::IN};
 
-	auto [s1, csrc_sum] = connection::build(csrc_0, sum_0);
+	auto [state, src_to_gain] = connection::build(src_0, gain_0);
 
 	/**************************************************************
-		| Constant Source |0>-------->0|     |
-                                       | Sum |0>------->0| Sink |
-          | Liniar Source |0>-------->1|     |
+		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
 	***************************************************************/
 
 Execute (in the correct order):
 
 .. code:: C++	
 
-	for (std::uint64_t i = 0; i < 10'000; ++i)
+	for (std::uint64_t i = 0; i < 10; ++i)
 	{
-		csrc->update(i);
-		lsrc->update(i);
-		
-		sum_->update(i);
-		
+		src_->update(i);
+		gain_->update(i);
 		sink_->update(i);
 	}
 
@@ -124,41 +119,34 @@ Create the controller:
 	
 	mbd::controller cntrl(message_callback);
 
-Register the models:
+Add the models:
 
 .. code:: C++
 
-	using const_src_d_t = const_source<double>;
-	using lin_src_d_t = liniar_source<double>;
-	using add_d_t = add<double>;
-	using sink_d_t = sink<double>; 
-	
-	cntrl.register_model<const_src_d_t>("Constant Source", 10.0, 0.0, 0);
-	cntrl.register_model<lin_src_f_t>("Liniar Source", 0.0, -0.1, 0);
-	cntrl.register_model<add_d_t>("Sum");
-	cntrl.register_model<sink_d_t>("Sink");
+	cntrl.add_library(my_lib);
+
+	cntrl.add_model(my_lib->get_name(), "Times Pi");
+	cntrl.add_model(my_lib->get_name(), "Liniar Source");
+	cntrl.add_model(my_lib->get_name(), "Sink");
 	
 Connect the models:
 
 .. code:: C++
 
-	cntrl.connect("Constant Source", 0, "Sum", 0);
-	cntrl.connect("Liniar Source", 0, "Sum", 1);
-	cntrl.connect("Sum", 0, "Sink", 0);
+	cntrl.connect("Liniar Source", 0, "Times Pi", 0);
+	cntrl.connect("Times Pi", 0, "Sink", 0);
 
 	/**************************************************************
-	| Constant Source |0>-------->0|     |
-                                       | Sum |0>------->0| Sink |
-          | Liniar Source |0>-------->1|     |
+		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
 	***************************************************************/
 	
-Calculate the execution order:
+Find algebraic loops:
 
 .. code:: C++
 
-	cntrl.excution_order();
+	std::size_t n_loops = cntrl.find_algebraic_loops();
 
-Execute:
+Calculate execution order and run all models:
 
 .. code:: C++
 
@@ -166,15 +154,14 @@ Execute:
 	cntrl.run(10'000);
 	
 	// or asyncronous
-	// cntrl.run_async(10'000);
+	cntrl.run_async(10'000);
 	
 Get:
 
 .. code:: C++
 
-	auto sink_ = cntrl.get<sink_d_t>("Sink");
+	auto sink_ = cntrl.get<sink>("Sink");
 	double value = sink_->read();
-
 
 ToDO:
 -----
