@@ -19,9 +19,9 @@ struct node
   node(const std::string &name, mbd::uuid uuid = mbd::uuid());
   ~node() = default;
 
-  const mbd::uuid _uuid;
   std::string _name;
-
+  const mbd::uuid _uuid;
+  
   std::vector<port> _in_ports, _out_ports;
   std::unordered_map<std::string, param> _params;
 

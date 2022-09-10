@@ -4,16 +4,16 @@
 
 namespace mbd
 {
-port::port(const std::string &name, port_dir_t d, const mbd::uuid& uuid)
-    : data_holder(), _dir(d), _connected(false), _name(name), _uuid(uuid)
+port::port(const std::string &name, port_dir_t d, const mbd::uuid &uuid)
+    : data_holder(), _name(name), _uuid(uuid), _dir(d), _connected(false)
 {}
 
 port::port(port &&other) noexcept
     : data_holder(std::move(other)), _name(std::move(other._name)),
-      _dir(other._dir), _connected(other._connected), _uuid(other._uuid)
+      _uuid(other._uuid), _dir(other._dir), _connected(other._connected)
 {}
 
-const port_dir_t port::get_dir() const { return _dir; }
+port_dir_t port::get_dir() const { return _dir; }
 
 void port::set_name(const std::string &name) { _name = name; }
 
