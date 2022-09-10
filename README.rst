@@ -81,8 +81,8 @@ Connect:
 
 .. code:: C++
 
-	mbd::end_point src_0{src_.get(), 0, port_dir_t::OUT};
-	mbd::end_point gain_0{gain_.get(), 0, port_dir_t::IN};
+	mbd::end_point src_0{src_, 0, port_dir_t::OUT};
+	mbd::end_point gain_0{gain_, 0, port_dir_t::IN};
 
 	auto [state, src_to_gain] = connection::build(src_0, gain_0);
 
