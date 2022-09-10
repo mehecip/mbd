@@ -16,7 +16,7 @@ namespace mbd
 
 struct node
 {
-  node(const std::string &name, mbd::uuid uuid = mbd::uuid("not unique"));
+  node(const std::string &name, mbd::uuid uuid = mbd::uuid());
   ~node() = default;
 
   void connect(port *this_out, port *other_in);
@@ -27,6 +27,9 @@ struct node
 
   std::vector<port> _in_ports, _out_ports;
   std::unordered_map<std::string, param> _params;
+
+  bool operator<(const node &other) const;
+  bool operator==(const node &other) const;
 
 protected:
   template <typename T>

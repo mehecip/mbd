@@ -5,7 +5,8 @@
 
 namespace
 {
-std::uint64_t get_index(const std::vector<mbd::port>& v, const mbd::port* const p)
+std::uint64_t get_index(const std::vector<mbd::port> &v,
+                        const mbd::port *const p)
 {
   const auto &it = std::find(v.cbegin(), v.cend(), *p);
   return it - v.cbegin();
@@ -33,4 +34,8 @@ void node::disconnect(port *this_out, port *other_in)
   if (o_it != ports.end())
     ports.erase(o_it);
 }
+
+bool node::operator<(const node &other) const { return _uuid < other._uuid; }
+
+bool node::operator==(const node &other) const { return _uuid == other._uuid; }
 } // namespace mbd

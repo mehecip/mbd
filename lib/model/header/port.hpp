@@ -1,5 +1,6 @@
 #pragma once
 #include "data_holder.hpp"
+#include "uuid.hpp"
 #include <string>
 
 namespace mbd
@@ -14,7 +15,7 @@ enum class port_dir_t : bool
 class port : public data_holder
 {
 public:
-  port(const std::string &name, port_dir_t d);
+  port(const std::string &name, port_dir_t d, const mbd::uuid& uuid = mbd::uuid());
   port(port &&other) noexcept;
 
   bool operator==(const port &other) const;
@@ -36,6 +37,7 @@ private:
   bool _connected;
 
   std::string _name;
+  const mbd::uuid _uuid;
 };
 
 } // namespace mbd
