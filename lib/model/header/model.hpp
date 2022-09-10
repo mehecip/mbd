@@ -20,6 +20,11 @@ public:
   // must be used to add inpus/outputs to your model
   model(const std::string &n);
 
+  model(const model&) = delete;
+  model(const model&&) = delete;
+
+  virtual ~model(){};
+
   // called when executing
   virtual void update(std::uint64_t tick) = 0;
 
@@ -30,11 +35,7 @@ public:
   // order of each model
   virtual bool is_feedthrough() const = 0;
 
-  virtual ~model(){};
-
   const std::string &get_name() const;
-
-protected:
-  std::string _validator_msg;
+  void set_name(const std::string& name);
 };
 } // namespace mbd
