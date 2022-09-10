@@ -20,6 +20,11 @@ public:
 		model::add_param<T>(_gain, gain);
 	}
 
+	void set_value(const T& val)
+	{
+		model::set_param<T>(_gain, val);
+	}
+
 	void update(std::uint64_t tick) override
 	{
 		const T& in = model::get_input<T>(0);
