@@ -15,7 +15,7 @@ Clone and build:
 -------------------
 
 
-```
+```Shell
 	git clone https://github.com/mehecip/mbd.git
 	cd mbd
 	cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
