@@ -164,7 +164,7 @@
 	// or asyncronous
 	cntrl.run_async(10'000);
 ```
-Get:
+### Get:
 
 ```c++
 
