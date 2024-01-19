@@ -14,20 +14,20 @@ C++ Model Based Development/Engineering Library
 Clone and build:
 -------------------
 
-.. code:: console
 
+```
 	git clone https://github.com/mehecip/mbd.git
 	cd mbd
 	cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
 	make f=Makefile
-
+```
 
 Usage - mbd::model
 -------------------
 
 Implement:
 
-.. code:: C++
+```c++
 
 	#include "model.hpp"
 
@@ -60,26 +60,26 @@ Implement:
 		}
 	};
 	
-
+```
 Register:
 
-.. code:: C++
+```c++
 
 	mbd::lib my_lib("My Lib");
 	my_lib.register_model<gain>("Times Pi", 3.1415);
 
 Build:
 
-.. code:: C++
+```c++
 
 	auto gain_ = my_lib.build_model("Times Pi");
 	auto src_ = my_lib.build_model("Liniar Source");
 	auto sink_ = my_lib.build_model("Sink");
-
+```
 	
 Connect:
 
-.. code:: C++
+```c++
 
 	mbd::end_point src_0{src_, 0, port_dir_t::OUT};
 	mbd::end_point gain_0{gain_, 0, port_dir_t::IN};
@@ -89,10 +89,10 @@ Connect:
 	/**************************************************************
 		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
 	***************************************************************/
-
+```
 Execute (in the correct order):
 
-.. code:: C++	
+```c++	
 
 	for (std::uint64_t i = 0; i < 10; ++i)
 	{
@@ -100,7 +100,7 @@ Execute (in the correct order):
 		gain_->update(i);
 		sink_->update(i);
 	}
-
+```
 
 
 Usage - mbd::controller
@@ -108,7 +108,7 @@ Usage - mbd::controller
 
 Create the controller:
 
-.. code:: C++
+```c++
 
 	#include "controller.hpp"
 	
@@ -118,20 +118,21 @@ Create the controller:
 	}
 	
 	mbd::controller cntrl(message_callback);
-
+```
 Add the models:
 
-.. code:: C++
+```c++
 
 	cntrl.add_library(my_lib);
 
 	cntrl.add_model("My Lib", "Times Pi");
 	cntrl.add_model("My Lib", "Liniar Source");
 	cntrl.add_model("My Lib", "Sink");
-	
+```
+
 Connect the models:
 
-.. code:: C++
+```c++
 
 	cntrl.connect("Liniar Source", 0, "Times Pi", 0);
 	cntrl.connect("Times Pi", 0, "Sink", 0);
@@ -139,30 +140,31 @@ Connect the models:
 	/**************************************************************
 		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
 	***************************************************************/
+```
 	
 Find algebraic loops:
 
-.. code:: C++
+```c++
 
 	std::size_t n_loops = cntrl.find_algebraic_loops();
-
+```
 Calculate execution order and run all models:
 
-.. code:: C++
+```c++
 
 	// syncronous
 	cntrl.run(10'000);
 	
 	// or asyncronous
 	cntrl.run_async(10'000);
-	
+```
 Get:
 
-.. code:: C++
+```c++
 
 	auto sink_ = cntrl.get<sink>("Sink");
 	double value = sink_->read();
-
+```
 ToDO:
 -----
 
