@@ -1,6 +1,5 @@
 # mbd
 
------------------------------------------
 
 
 ## C++ Model Based Development/Engineering Library 
@@ -74,6 +73,7 @@
 
 <details>
 <summary>Build - Connect - Run without controller</summary>
+	
 ### Build:
 
 ```c++
@@ -171,7 +171,7 @@ Get:
 	auto sink_ = cntrl.get<sink>("Sink");
 	double value = sink_->read();
 ```
-ToDO:
------
 
-Implement ``view``
+## ToDO:
+
+### Implement ```mbd::view```
