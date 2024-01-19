@@ -1,18 +1,19 @@
-mbd
-######
+# mbd
+
+-----------------------------------------
 
 
-C++ Model Based Development/Engineering Library 
------------------------------------------------
+## C++ Model Based Development/Engineering Library 
 
 - fast: Design with 7 models executed 10.000.000 ticks in 1.55 sec on Ubuntu.
 - easy to use: must implement only 2 methods: update() and is_feedthrough() in which you call add_input/add_output and get_input/set_output. 
 - portable: Tested on Windows 10(Visual Studio 2019), Debian VM(GCC 8.3) and Raspbian(GCC 4.9).
 - syncronous and asyncronous execution(based on execution order) available with the controller.
 
-
-Clone and build:
--------------------
+<details>
+<summary>Clone and build</summary>
+	
+## Clone and build:
 
 
 ```Shell
@@ -21,11 +22,12 @@ Clone and build:
 	cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
 	make f=Makefile
 ```
+</details>
 
-Usage - mbd::model
--------------------
 
-Implement:
+## Usage - mbd::model
+
+### Implement:
 
 ```c++
 
@@ -61,7 +63,8 @@ Implement:
 	};
 	
 ```
-Register:
+
+### Register:
 
 ```c++
 
@@ -69,7 +72,9 @@ Register:
 	my_lib.register_model<gain>("Times Pi", 3.1415);
 ```
 
-Build:
+<details>
+<summary>Build - Connect - Run without controller</summary>
+### Build:
 
 ```c++
 
@@ -78,7 +83,7 @@ Build:
 	auto sink_ = my_lib.build_model("Sink");
 ```
 	
-Connect:
+### Connect:
 
 ```c++
 
@@ -91,7 +96,7 @@ Connect:
 		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
 	***************************************************************/
 ```
-Execute (in the correct order):
+### Execute (in the correct order):
 
 ```c++	
 
@@ -103,11 +108,11 @@ Execute (in the correct order):
 	}
 ```
 
+</details>
 
-Usage - mbd::controller
-------------------------
+## Usage - mbd::controller
 
-Create the controller:
+### Create the controller:
 
 ```c++
 
@@ -120,7 +125,7 @@ Create the controller:
 	
 	mbd::controller cntrl(message_callback);
 ```
-Add the models:
+### Add the models:
 
 ```c++
 
@@ -131,7 +136,7 @@ Add the models:
 	cntrl.add_model("My Lib", "Sink");
 ```
 
-Connect the models:
+### Connect the models:
 
 ```c++
 
@@ -143,13 +148,13 @@ Connect the models:
 	***************************************************************/
 ```
 	
-Find algebraic loops:
+### Find algebraic loops:
 
 ```c++
 
 	std::size_t n_loops = cntrl.find_algebraic_loops();
 ```
-Calculate execution order and run all models:
+### Calculate execution order and run all models:
 
 ```c++
 
