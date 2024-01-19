@@ -67,6 +67,7 @@ Register:
 
 	mbd::lib my_lib("My Lib");
 	my_lib.register_model<gain>("Times Pi", 3.1415);
+```
 
 Build:
 
