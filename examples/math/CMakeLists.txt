@@ -24,6 +24,7 @@ add_executable( math_example
 include_directories ( 
 	header
 	../../lib/model/header
+	../../js_view_adapter/header
 )
 
 target_link_libraries(math_example 
@@ -42,12 +43,25 @@ if(BUILD_CONTROLLER)
 	)
 endif()
 
+include(FetchContent)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+if (BUILD_VIEW)
+
+	add_definitions(-DBUILD_VIEW)
+	target_link_libraries(math_example 
+		js_view_adapter
+		nlohmann_json::nlohmann_json
+	) 
+endif()
 
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 		set(CMAKE_CXX_FLAGS "/std:c++17 /O2 /Ob2 /EHsc")
 	else()

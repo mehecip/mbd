@@ -1,9 +1,21 @@
+#include "library.hpp"
+#include "js_view_adapter.hpp"
+
 #include <cstddef>
-#include <zmq.hpp>
+#include <unordered_set>
+// #include <zmq.hpp>
+
+#include <vector>
+
 #include <iostream>
 
 int main()
 {
+    mbd::lib my_lib("My Lib");
+    mbd::lib my_otherlib("My Other Lib");
+    
+    mbd::view::js_view_adapter view(6006, {my_lib, my_otherlib});
+   // view.register_param<bool>("not_bool");
     // zmq::context_t ctx;
     // zmq::socket_t sock(ctx, zmq::socket_type::stream);
 
@@ -33,6 +45,8 @@ int main()
 
     // sock.disconnect("tcp://127.0.0.1:3000");
 
+
+/*
     zmq::context_t ctx;
     zmq::socket_t sock(ctx, zmq::socket_type::pull);
 
@@ -52,5 +66,7 @@ std::size_t counter = 0;
     }
 
     return 5;
+
+    */
     
 }

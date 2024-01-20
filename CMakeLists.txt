@@ -10,6 +10,12 @@ if(BUILD_CONTROLLER)
   add_subdirectory(lib/controller)	
 endif()
 
+# view
+option(BUILD_VIEW "Build View adapter" ON)
+if(BUILD_VIEW)
+   add_subdirectory(js_view_adapter)	
+endif()
+
 # examples
 option(BUILD_EXAMPLES "Build Examples" ON)
 if(BUILD_EXAMPLES)
