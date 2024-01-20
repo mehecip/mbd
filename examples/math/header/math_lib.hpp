@@ -9,7 +9,6 @@
 #include "type_convertor.hpp"
 #include "unit_delay.hpp"
 
-#include <cstdint>
 #include <sys/types.h>
 #include <type_traits>
 
@@ -25,7 +24,7 @@ lib get_math_lib(const std::string &type_name)
   lib math_lib("MathLib - " + type_name);
 
   math_lib.register_model<const_source<T>>("const_src");
-  math_lib.register_model<liniar_source<T>>("lin_src");
+  math_lib.register_model<linear_source<T>>("lin_src");
 
   math_lib.register_model<sink<T>>("sink");
   math_lib.register_model<gain<T>>("gain");
@@ -42,10 +41,7 @@ lib get_math_lib(const std::string &type_name)
 
   math_lib.register_model<multiply<T>>("multiply");
 
-  math_lib.register_model<type_convertor<float, T>>("float_to");
-  math_lib.register_model<type_convertor<double, T>>("double_to");
-  math_lib.register_model<type_convertor<int, T>>("int_to");
-  math_lib.register_model<type_convertor<uint, T>>("uint_to");
+  math_lib.register_model<type_convertor<T, T>>("double_to");
 
   math_lib.register_model<unit_delay<T>>("delay");
 

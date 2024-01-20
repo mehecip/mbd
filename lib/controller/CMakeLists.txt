@@ -17,7 +17,7 @@ set(HPP_FILES
   header/dfs.hpp
 )
 
-add_library( controller 
+add_library( controller STATIC
 	${HPP_FILES}
 	${CPP_FILES}
 )

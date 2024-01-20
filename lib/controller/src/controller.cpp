@@ -16,18 +16,18 @@ controller::controller(const msg_callback_f &f) : _callback_f(f) {}
 
 void controller::add_library(const lib &l) { _libs.emplace(l.get_name(), l); }
 
-model* controller::add_model(const std::string &libname,
-                           const std::string &modelname)
+model *controller::add_model(const std::string &libname,
+                             const std::string &modeltype)
 {
   const auto &it = _libs.find(libname);
   if (it == _libs.end())
     return nullptr;
 
-  auto mdl = it->second.build_model(modelname);
+  auto mdl = it->second.build_model(modeltype);
   if (mdl == nullptr)
     return nullptr;
 
-  model* ptr = mdl.get();
+  model *ptr = mdl.get();
 
   mdl->add_msg_callback(_callback_f);
   _g.push_model(std::move(mdl));
@@ -46,10 +46,11 @@ bool controller::disconnect(const std::string &out_model, std::uint64_t out_idx,
 {
   return _g.disconnect(out_model, out_idx, in_model, in_idx);
 }
+void controller::execution_order() { _g.execution_order(); }
 
 void controller::run(std::uint64_t ticks)
 {
-  const auto &order = _g.template execution_order();
+  const auto &order = _g.execution_order();
   log_prio(order);
 
   for (std::uint64_t t = 0; t < ticks; ++t)
@@ -59,6 +60,30 @@ void controller::run(std::uint64_t ticks)
     {
       for (auto model : models)
         model->update(t);
+    }
+  }
+}
+
+void controller::run_async(std::uint64_t ticks)
+{
+  const auto &order = _g.execution_order();
+  log_prio(order);
+
+  for (std::uint64_t t = 0; t < ticks; ++t)
+  {
+    // call update in the order of the prios
+    for (const auto &models : order)
+    {
+      std::vector<std::future<void>> futures;
+
+      // launch update() for all the models with the current priority
+      for (const auto &model : models)
+        futures.push_back(
+            std::async(std::launch::async, &model::update, model, t));
+
+      // wait for all models with the current priority to finish updating
+      for (const auto &f : futures)
+        f.wait();
     }
   }
 }
@@ -79,7 +104,7 @@ void controller::log_prio(const std::vector<std::vector<model *>> &v)
 
 std::size_t controller::find_algebraic_loops()
 {
-  const auto &loops = _g.template algebraic_loops();
+  const auto &loops = _g.algebraic_loops();
   if (loops.size() != 0)
   {
     std::ostringstream ss;

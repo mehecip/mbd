@@ -11,7 +11,7 @@ class gain
 	: public model
 {
 public:
-	gain(const std::string& name, T gain = {}) : model(name), _zero(T{}) 
+	gain(T gain = {}) : model("gain"), _zero(T{}) 
 	{
 		model::add_input<T>(model::_name + "_In1", T{});
 		model::add_output<T>(model::_name + "_Out1", T{});
@@ -37,9 +37,9 @@ public:
 		model::set_output<T>(0, out);
 	}
 
-	bool is_feedthrough() const override
+	bool is_source() const override
 	{
-		return true;
+		return false;
 	}
 
 	bool has_overflown() const

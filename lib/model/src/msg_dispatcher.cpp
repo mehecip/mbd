@@ -1,5 +1,7 @@
 #include "msg_dispatcher.hpp"
 
+#include <algorithm>
+
 namespace mbd
 {
 

@@ -28,7 +28,7 @@ set(HPP_FILES
   header/uuid.hpp
 )
 
-add_library( model 
+add_library( model STATIC 
 	${HPP_FILES}
 	${CPP_FILES}
 )

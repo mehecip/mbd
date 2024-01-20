@@ -16,7 +16,7 @@ class type_convertor : public model
 {
 
 public:
-  type_convertor(const std::string &name) : model(name)
+  type_convertor() : model("type convertor")
   {
     add_input<IN>(_name + "_IN", IN{});
     add_output<OUT>(_name + "_OUT", OUT{});
@@ -35,7 +35,7 @@ public:
     }
   }
 
-  bool is_feedthrough() const override { return true; }
+  bool is_source() const override { return false; }
 };
 
 } // namespace impl

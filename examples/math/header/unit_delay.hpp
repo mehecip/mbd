@@ -11,7 +11,7 @@ class unit_delay
 	: public model
 {
 public:
-	unit_delay(const std::string& name, T init_val = T{}) : model(name), _value(init_val)
+	unit_delay(T init_val = T{}) : model("unit delay"), _value(init_val)
 	{
 		add_input<T>(_name + "_IN", _value);
 		add_output<T>(_name + "_OUT", _value);
@@ -28,9 +28,9 @@ public:
 		_value = init_val;
 	}
 
-	bool is_feedthrough() const override final
+	bool is_source() const override final
 	{
-		return false;
+		return true;
 	}
 
 private:

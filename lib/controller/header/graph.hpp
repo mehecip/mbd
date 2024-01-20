@@ -2,13 +2,11 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <queue>
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
-#include <stack>
 
 #include "connection.hpp"
 #include "dfs.hpp"
@@ -18,7 +16,7 @@
 namespace mbd
 {
 
-class graph
+class  graph
 {
 public:
   graph() = default;
@@ -39,6 +37,14 @@ public:
 
   template <typename ALGO = dfs>
   std::vector<model_vec_t> execution_order();
+
+  const std::vector<model::ptr_t>& get_models() const {
+    return _models;
+  }
+
+  const std::vector<connection::ptr_t>& get_connections() const {
+    return _connections;
+  }
 
 private:
   // if it exists, finds a model in the _model_cache by name

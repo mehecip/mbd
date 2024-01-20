@@ -12,16 +12,20 @@ enum class port_dir_t : bool
   OUT = 1
 };
 
-class port : public data_holder
+class  port : public data_holder
 {
 public:
+
+  port() = default;
   port(const std::string &name, port_dir_t d,
        const mbd::uuid &uuid = mbd::uuid());
-  port(port &&other) noexcept;
 
-  bool operator==(const port &other) const;
+  port(port &&other) noexcept;
+  port &operator=(const port &&other);
 
   ~port() = default;
+
+  bool operator==(const port &other) const;
 
   port_dir_t get_dir() const;
 
@@ -33,11 +37,13 @@ public:
 
   const std::string &get_name() const;
 
+  const mbd::uuid &get_uuid() const;
+
 private:
   std::string _name;
-  const mbd::uuid _uuid;
+  mbd::uuid _uuid;
 
-  const port_dir_t _dir;
+  port_dir_t _dir;
   bool _connected;
 };
 

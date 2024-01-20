@@ -1,5 +1,5 @@
 #pragma once
-#include <algorithm>
+
 #include <functional>
 #include <string>
 #include <vector>
@@ -11,7 +11,7 @@ namespace mbd
 using msg_callback_f = std::function<void(log_level, const std::string &)>;
 
 // I did not know how to call it :|
-class msg_dispatcher
+class  msg_dispatcher
 {
 
 public:

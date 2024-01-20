@@ -2,16 +2,13 @@
 #include "model.hpp"
 #include <unordered_set>
 
-namespace mbd
-{
+namespace mbd {
 
 lib::lib(const std::string &name) : _lib_name(name) {}
 
-model::ptr_t lib::build_model(const std::string &name) const
-{
-  const auto it = _factories.find(name);
-  if (it != _factories.end())
-  {
+model::ptr_t lib::build_model(const std::string &type) const {
+  const auto it = _factories.find(type);
+  if (it != _factories.end()) {
     const auto &factory = it->second;
     return factory();
   }
@@ -19,9 +16,8 @@ model::ptr_t lib::build_model(const std::string &name) const
   return nullptr;
 }
 
-const std::unordered_set<std::string> &lib::get_model_names() const
-{
-  return _model_names;
+const std::unordered_set<std::string> &lib::get_model_types() const {
+  return _model_types;
 }
 
 const std::string &lib::get_name() const { return _lib_name; }
