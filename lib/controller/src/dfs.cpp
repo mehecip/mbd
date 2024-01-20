@@ -1,51 +1,47 @@
 #include "dfs.hpp"
 
 #include <algorithm>
+#include <cstdint>
 #include <stack>
 #include <vector>
 
-namespace mbd
-{
+namespace mbd {
 
 dfs::dfs(const std::vector<model::ptr_t> &models,
-         const std::vector<connection::ptr_t> &conn)
-{
+         const std::vector<connection::ptr_t> &conn) {
 
   _models.reserve(models.size());
 
   for (const auto &m : models)
     _models.push_back(m.get());
 
-  for (const auto &c : conn)
-  {
+  for (const auto &c : conn) {
     const auto [from, to] = c->get_models();
     _children[from].insert(to);
     _parents[to].insert(from);
   }
 }
 
-std::vector<model_vec_t> dfs::order()
-{
+std::vector<model_vec_t> dfs::order() {
   model_vec_t sources;
   prio_map_t prio_map;
 
   // add all the models that are not feedthrough with prio 0
   // they will act as starting points in the bfs algo
   std::for_each(_models.cbegin(), _models.cend(), [&](const auto &m) {
-    if (!m->is_feedthrough())
-    {
+    if (m->is_source()) {
       sources.push_back(m);
     }
   });
 
-  const auto &get_model_prio = [&](auto *m, std::uint64_t current_prio) {
-    if (!m->is_feedthrough()) // is source
+  const auto &get_model_prio =
+      [&](auto *m, std::uint64_t current_prio) -> std::uint64_t {
+    if (!m->is_source()) // is source
     {
       return 0ul;
     }
 
-    if (const auto it = prio_map.find(m); it != prio_map.end())
-    {
+    if (const auto it = prio_map.find(m); it != prio_map.end()) {
       std::size_t m_prio = it->second;
       return std::max(m_prio, current_prio) + 1ul;
     }
@@ -53,25 +49,25 @@ std::vector<model_vec_t> dfs::order()
     return ++current_prio;
   };
 
-  for (const auto start : sources)
-  {
+  for (const auto start : sources) {
     std::stack<model *> stack;
     stack.push(start);
 
     std::size_t prio = 0;
+    std::unordered_set<model *> visited;
 
     // bfs
-    while (!stack.empty())
-    {
+    while (!stack.empty()) {
       auto model = stack.top();
       stack.pop();
+
+      visited.insert(model);
 
       prio = get_model_prio(model, prio);
       prio_map[model] = prio;
 
-      for (auto next : _children[model])
-      {
-        if (prio_map.find(next) == prio_map.end())
+      for (auto next : _children[model]) {
+        if (visited.find(next) == visited.end())
           stack.push(next);
       }
     }
@@ -92,17 +88,16 @@ std::vector<model_vec_t> dfs::order()
   return priority_vect;
 }
 
-std::vector<model_vec_t> dfs::algebraic_loops()
-{
+std::vector<model_vec_t> dfs::algebraic_loops() {
   std::vector<model_vec_t> loops = get_all_loops();
 
-  // if all of the models in a loop are feedthrough (none acts like a source)
+  // none of the models in a loop are sources
   // then the loop is algebraic and we keep it
   loops.erase(std::remove_if(loops.begin(), loops.end(),
                              [](const auto &l) {
                                return !std::all_of(l.begin(), l.end(),
                                                    [](const auto &m) {
-                                                     return m->is_feedthrough();
+                                                     return !m->is_source();
                                                    });
                              }),
               loops.end());
@@ -118,12 +113,10 @@ std::vector<model_vec_t> dfs::algebraic_loops()
   return loops;
 }
 
-std::vector<model_vec_t> dfs::get_all_loops()
-{
+std::vector<model_vec_t> dfs::get_all_loops() {
   std::vector<model_vec_t> loops;
 
-  for (const auto start : _models)
-  {
+  for (const auto start : _models) {
     // a model can't be in a loop if it has no inputs or outputs connected
     if (_children.find(start) == _children.end() ||
         _parents.find(start) == _parents.end())
@@ -136,24 +129,19 @@ std::vector<model_vec_t> dfs::get_all_loops()
     std::stack<stack_t> stack;
     stack.push({start, {start}});
 
-    while (!stack.empty())
-    {
+    while (!stack.empty()) {
       auto [cm, this_path] = stack.top();
       stack.pop();
 
       visited.insert(cm);
 
-      for (const auto next : _children[cm])
-      {
-        if (visited.find(next) == visited.end())
-        {
+      for (const auto next : _children[cm]) {
+        if (visited.find(next) == visited.end()) {
           auto next_path = this_path;
           next_path.insert(next);
 
           stack.push({next, next_path});
-        }
-        else if (start == next)
-        {
+        } else if (start == next) {
           loops.insert(loops.end(), {this_path.begin(), this_path.end()});
         }
       }

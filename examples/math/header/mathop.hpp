@@ -18,9 +18,9 @@ public:
 		add_output<T>(_name + "_Out1", T{});
 	}
 
-	bool is_feedthrough() const override
+	bool is_source() const override
 	{
-		return true;
+		return false;
 	}
 
 	virtual void update(std::uint64_t tick) override = 0;
@@ -32,7 +32,7 @@ template <typename T>
 class add: public mathop <T>
 {
 public:
-	add(const std::string& name) : mathop<T>(name) {}
+	add() : mathop<T>("add") {}
 
 	void update(std::uint64_t tick) override
 	{
@@ -48,7 +48,7 @@ template <typename T>
 class subtract : public mathop<T>
 {
 public:
-	subtract(const std::string& name) : mathop<T>(name) {}
+	subtract() : mathop<T>("subtract") {}
 
 	void update(std::uint64_t tick) override
 	{
@@ -63,7 +63,7 @@ template <typename T>
 class div : public mathop<T>
 {
 public:
-	div(const std::string& name) : mathop<T>(name) {}
+	div() : mathop<T>("div") {}
 
 	void update(std::uint64_t tick) override
 	{
@@ -81,7 +81,7 @@ template <typename T>
 class mod : public mathop<T>
 {
 public:
-	mod(const std::string& name) : mathop<T>(name) {}
+	mod() : mathop<T>("mod") {}
 
 	void update(std::uint64_t tick) override
 	{
@@ -96,7 +96,7 @@ template <typename T>
 class multiply : public mathop<T>
 {
 public:
-	multiply(const std::string& name) : mathop<T>(name) {}
+	multiply() : mathop<T>("multiply") {}
 
 	void update(std::uint64_t tick) override
 	{

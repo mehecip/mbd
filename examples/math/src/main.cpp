@@ -7,13 +7,10 @@
 #include "sink.hpp"
 #include "source.hpp"
 #include "type_convertor.hpp"
-#include "unit_delay.hpp"
 
-#include <cstddef>
 #include <iostream>
 
 #include <chrono>
-#include <utility>
 
 #include <assert.h>
 
@@ -74,24 +71,24 @@ void controller_example()
   cntrl.add_library(math_lib);
 
   bool flag = true;
-  for (const auto &name : math_lib.get_model_names())
+  for (const auto &type : math_lib.get_model_types())
   {
-    const auto mdl = cntrl.add_model(lib_name, name);
+    const auto mdl = cntrl.add_model(lib_name, type);
     flag &= mdl != nullptr;
   }
 
   assert(flag == true && "Add model should work.");
 
-  std::cout << "Creating and registring duration: " << t.elapsed_microsec()
+  std::cout << "Model creation and registration duration: " << t.elapsed_microsec()
             << " microseconds." << std::endl;
 
   t.reset();
 
-  flag &= cntrl.connect("const_src", 0, "sum", 0);
-  flag &= cntrl.connect("lin_src", 0, "double_to", 0);
-  flag &= cntrl.connect("double_to", 0, "sum", 1);
-  flag &= cntrl.connect("sum", 0, "delay", 0);
-  flag &= cntrl.connect("delay", 0, "gain", 0);
+  flag &= cntrl.connect("constant source", 0, "add", 0);
+  flag &= cntrl.connect("linear source", 0, "type convertor", 0);
+  flag &= cntrl.connect("type convertor", 0, "add", 1);
+  flag &= cntrl.connect("add", 0, "unit delay", 0);
+  flag &= cntrl.connect("unit delay", 0, "gain", 0);
   flag &= cntrl.connect("gain", 0, "sink", 0);
 
   assert(flag == true && "Connect should work.");
@@ -99,12 +96,12 @@ void controller_example()
   std::cout << "Connecting duration: " << t.elapsed_microsec()
             << " microseconds. " << std::endl;
 
-  auto csrc = cntrl.get<mbd::impl::const_source<double>>("const_src");
+  auto csrc = cntrl.get<mbd::impl::const_source<double>>("constant source");
   csrc->set_value(10'000.0);
   csrc->set_init_val(-100.0);
   csrc->set_step_tick(10'001);
 
-  auto lsrc = cntrl.get<mbd::impl::liniar_source<double>>("lin_src");
+  auto lsrc = cntrl.get<mbd::impl::linear_source<double>>("linear source");
   lsrc->set_param(-3.1415926f, 0.001f);
 
   auto gain = cntrl.get<mbd::impl::gain<double>>("gain");
@@ -122,7 +119,7 @@ void controller_example()
   auto sink_ = cntrl.get<mbd::impl::sink<double>>("sink");
   std::cout << "Sink Value after execution: " << sink_->read() << "\n\n";
 
-  flag &= cntrl.disconnect("const_src", 0, "sum", 0);
+  flag &= cntrl.disconnect("constant source", 0, "add", 0);
 
   assert(flag == true && "Disconnect should work");
 }
@@ -219,7 +216,7 @@ void example()
 
   float lsrc_init_val = -110.0f;
   float lsrc_step_val = 1.0f;
-  math_lib.register_model<liniar_source<float>>("Liniar Source", lsrc_init_val,
+  math_lib.register_model<linear_source<float>>("Liniar Source", lsrc_init_val,
                                                 lsrc_step_val);
 
   double gain_val = 2.0;

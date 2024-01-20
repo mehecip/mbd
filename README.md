@@ -5,7 +5,7 @@
 ## C++ Model Based Development/Engineering Library 
 
 - fast: Design with 7 models executed 10.000.000 ticks in 1.55 sec on Ubuntu.
-- easy to use: must implement only 2 methods: update() and is_feedthrough() in which you call add_input/add_output and get_input/set_output. 
+- easy to use: must implement only 2 methods: update() and is_source() in which you call add_input/add_output and get_input/set_output. 
 - portable: Tested on Windows 10(Visual Studio 2019), Debian VM(GCC 8.3) and Raspbian(GCC 4.9).
 - syncronous and asyncronous execution(based on execution order) available with the controller.
 
@@ -55,9 +55,9 @@
 		}
 
 		/** Let the controller know if the model behaves as a source. */
-		bool is_feedthrough() const override
+		bool is_source() const override
 		{
-			return true;
+			return false;
 		}
 	};
 	

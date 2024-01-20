@@ -1,8 +1,7 @@
 #pragma once
-#include <algorithm>
+
 #include <memory>
 #include <string>
-#include <type_traits>
 #include <typeindex>
 #include <utility>
 

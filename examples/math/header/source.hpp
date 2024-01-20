@@ -22,7 +22,7 @@ public:
     model::add_param<T>(_step_tick, step_tick);
   }
 
-  bool is_feedthrough() const override final { return false; }
+  bool is_source() const override final { return true; }
 
   void set_step_tick(T val) { model::set_param(_step_tick, val); }
 
@@ -39,9 +39,9 @@ template <typename T>
 class const_source : public source<T>
 {
 public:
-  const_source(const std::string &name, const T &val = T{}, T init_val = T{},
+  const_source(const T &val = T{}, T init_val = T{},
                std::uint64_t step_tick = 0ull)
-      : source<T>(name, init_val, step_tick)
+      : source<T>("constant source", init_val, step_tick)
   {
     model::add_param<T>(_param, val);
   }
@@ -68,12 +68,12 @@ private:
 };
 
 template <typename T>
-class liniar_source : public source<T>
+class linear_source : public source<T>
 {
 public:
-  liniar_source(const std::string &name, T init_val = T{}, T step_val = T{},
+  linear_source(T init_val = T{}, T step_val = T{},
                 std::uint64_t step_tick = 0ull)
-      : source<T>(name, init_val, step_tick)
+      : source<T>("linear source", init_val, step_tick)
   {
     model::add_param<T>(_current_val, init_val);
     model::add_param<T>(_step_val, step_val);

@@ -1,6 +1,5 @@
 #include "uuid.hpp"
 
-#include <atomic>
 #include <string>
 
 #include <random>

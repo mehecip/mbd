@@ -1,7 +1,6 @@
 #pragma once
-#include <algorithm>
-#include <functional>
-#include <queue>
+
+
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -15,7 +14,7 @@ namespace mbd
 
 class model;
 
-class controller
+class  controller
 {
 public:
   controller(const msg_callback_f &f);
@@ -27,13 +26,9 @@ public:
   controller &operator=(controller &&) = delete;
   controller &operator=(const controller &) = delete;
 
-  // creates, builds and stores a model of type M with name and args
-  template <typename M, typename... Args>
-  void register_model(const std::string &name, Args &&...args);
-
   void add_library(const lib &l);
 
-  model* add_model(const std::string &libname, const std::string &modelname);
+  model* add_model(const std::string &libname, const std::string &modeltype);
 
   // connects the out_idx of out_model to the in_idx of in_model
   bool connect(const std::string &out_model, std::uint64_t out_idx,
@@ -46,10 +41,12 @@ public:
   // computed
   std::size_t find_algebraic_loops();
 
-  // syncronous execution(in the order from execution order)
+  void execution_order();
+
+  // synchonous execution(in the order from execution order)
   void run(std::uint64_t ticks);
 
-  // asyncronous execution(in the order from execution order)
+  // asynchronous execution(in the order from execution order)
   // all the models with the same prio order would be executed at the same time
   // with std::async
   void run_async(std::uint64_t ticks);
@@ -59,6 +56,8 @@ public:
   // or nullptr if model with key = name is not found in the map
   template <typename T>
   T *get(const std::string &name);
+
+  const mbd::graph& get_graph() const {return _g;}
 
 private:
   msg_callback_f _callback_f;

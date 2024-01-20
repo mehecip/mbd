@@ -1,5 +1,8 @@
 #include "graph.hpp"
+#include "connection_state.hpp"
+#include "log_level.hpp"
 #include "model.hpp"
+#include <string>
 
 namespace mbd
 {
@@ -26,6 +29,15 @@ bool graph::connect(const std::string &out_model, std::uint64_t out_idx,
   const end_point to{in, in_idx, port_dir_t::IN};
 
   auto [state, conn] = connection::build(from, to);
+
+  auto level =
+      state == connection_state::CONNECTED ? log_level::INFO : log_level::ERROR;
+  out->add_message(level, out_model + "::" + from._port->get_name() + " [" +
+                              std::to_string(out_idx) + "] -> " + in_model +
+                              "::" + to._port->get_name() + " [" +
+                              std::to_string(in_idx) +
+                              "] connection status: " + connection_info(state));
+
   if (connection_state::CONNECTED != state)
     return false;
 

@@ -101,7 +101,7 @@ void js_view_adapter::offer_models(const std::unordered_set<mbd::lib> &libs) {
                   },
               ],
 
-              "is_feedthrough": false
+              "is_source": false
           },
       ]
   }
