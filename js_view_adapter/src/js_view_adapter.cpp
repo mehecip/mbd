@@ -1,72 +1,67 @@
 #include "js_view_adapter.hpp"
 #include "library.hpp"
 
-#include <utility>
-#include <unordered_set>
+#include <iostream>
+#include <string>
 #include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include "json_serializer.hpp"
+#include <nlohmann/json.hpp>
 
 namespace mbd {
 namespace view {
 
 js_view_adapter::js_view_adapter(std::uint16_t port,
-                                 const std::unordered_set<mbd::lib> &libs) {
+                                 const std::vector<mbd::lib> &libs) {
   start_web_server(port);
   listen();
   offer_models(libs);
 }
 
 void js_view_adapter::to_model(mbd::node *n) {
-  const auto &[needs_update, update] = get_updates(n->_uuid);
-  if (needs_update) {
-    from_json(update, n);
+  const auto &[out_dated, update] = get_updates(n->_uuid);
+  if (out_dated) {
+    *n = json{update};
   }
 }
 
 void js_view_adapter::to_view(mbd::node const *n, std::size_t tick_) {
-  json_ obj = to_json(n);
-  send_async(obj); // or send_blocking
+  send_async(*n); // or send_blocking
 }
 
-json_ js_view_adapter::to_json(mbd::node const *n) { return json_(); }
-
-void js_view_adapter::from_json(const json_ &obj, mbd::node *n) {}
-
-json_ js_view_adapter::to_json(const mbd::lib &n) { return json_(); }
-
-void js_view_adapter::send_async(const json_ &obj) {
+void js_view_adapter::send_async(const json &obj) {
+  std::cout << obj;
   // send to websocket
 }
 
-void js_view_adapter::send_blocking(const json_ &obj) {
+void js_view_adapter::send_blocking(const json &obj) {
   // send to websocket
 }
+
 // blocking
-std::pair<bool, json_> js_view_adapter::get_updates(const mbd::uuid &id) {
+std::pair<bool, std::string> js_view_adapter::get_updates(const mbd::uuid &id) {
   // the updates are received async in the background
   // and get_updates just checks if there are any for the id
   const auto &it = _updates.find(id.to_string());
   if (it != _updates.end()) {
-    std::pair<bool, json_> ret{true, it->second};
+    std::pair<bool, std::string> ret{true, it->second};
     _updates.erase(it);
 
     return ret;
   }
 
-  return {false, json_()};
+  return {false, {}};
 }
 
 void js_view_adapter::start_web_server(std::uint16_t port) {}
 
 void js_view_adapter::listen() {}
 
-void js_view_adapter::offer_models(const std::unordered_set<mbd::lib> &libs) {
-  json_ obj;
+void js_view_adapter::offer_models(const std::vector<mbd::lib> &libs) {
 
-  for (const auto &lib : libs) {
-    obj = to_json(lib);
-  }
-
-  send_async(obj);
+  send_async(libs);
 
   /* lib serialization
   {
