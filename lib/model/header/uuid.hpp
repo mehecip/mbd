@@ -14,6 +14,7 @@ public:
   uuid(const std::string &str);
 
   bool operator==(const uuid &other) const;
+  bool operator!=(const uuid &other) const;
   bool operator<(const uuid &other) const;
 
   const std::string &to_string() const;
