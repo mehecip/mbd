@@ -33,6 +33,8 @@ add_library( model STATIC
 	${CPP_FILES}
 )
 
+add_subdirectory(test)	
+
 include_directories(header)
 
 target_link_libraries(model)
