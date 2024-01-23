@@ -1,7 +1,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <gtest/gtest.h>
+#include <numeric>
 #include <string>
+#include <unordered_map>
 
 #include "log_level.hpp"
 #include "model.hpp"
@@ -198,34 +200,46 @@ TEST(ModelTest, Custom_type)
 
 TEST(ModelTest, MessageDispatcher)
 {
-  std::size_t counter = 0ull;
   std::string log_string = "";
+  std::unordered_map<mbd::log_level, std::size_t> log_counters;
 
-  const auto &msg_callback = [&counter, &log_string](const mbd::log_level level,
-                                        const auto &msg) { 
-                                          ++counter; 
-                                          log_string = msg;};
+  const auto &msg_callback = [&log_string, &log_counters](
+                                 const mbd::log_level level, const auto &msg) {
+    log_string = msg;
+    ++log_counters[level];
+  };
 
   my_source src;
   src.add_msg_callback(msg_callback);
-  
+
   my_sink sink;
   sink.add_msg_callback(msg_callback);
 
   std::size_t ticks = 1'000;
   for (std::size_t tick = 0; tick < ticks; ++tick)
   {
-    EXPECT_NO_THROW(src.update(tick)); // adds messages
+    EXPECT_NO_THROW(src.update(tick));  // adds messages
     EXPECT_NO_THROW(sink.update(tick)); // does not add any messages
-    EXPECT_EQ(counter, tick + 1);
+
+    const std::size_t total_log_msgs = std::accumulate(
+        log_counters.cbegin(), log_counters.cend(), 0,
+        [](std::size_t prev, const auto &pair) { return prev + pair.second; });
+
+    EXPECT_EQ(total_log_msgs, tick + 1);
     EXPECT_EQ(log_string, "");
   }
 
   src.add_message(mbd::log_level::INFO, "my src message");
-  EXPECT_EQ(counter, ticks + 1);
+  EXPECT_EQ(log_counters[mbd::log_level::INFO], 101);
+  EXPECT_EQ(log_counters[mbd::log_level::WARNING], 100);
+  EXPECT_EQ(log_counters[mbd::log_level::ERROR], 100);
+  EXPECT_EQ(log_counters[mbd::log_level::DEBUG], ticks - 300);
   EXPECT_EQ(log_string, "my src message");
 
   sink.add_message(mbd::log_level::INFO, "my sink message");
-  EXPECT_EQ(counter, ticks + 2);
+  EXPECT_EQ(log_counters[mbd::log_level::INFO], 102);
+  EXPECT_EQ(log_counters[mbd::log_level::WARNING], 100);
+  EXPECT_EQ(log_counters[mbd::log_level::ERROR], 100);
+  EXPECT_EQ(log_counters[mbd::log_level::DEBUG], ticks - 300);
   EXPECT_EQ(log_string, "my sink message");
 }
