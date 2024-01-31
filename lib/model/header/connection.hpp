@@ -2,11 +2,9 @@
 
 #include "connection_state.hpp"
 #include "data_type.hpp"
-#include "log_level.hpp"
 
-#include <cstddef>
 #include <memory>
-#include <string>
+#include <optional>
 #include <utility>
 
 namespace mbd
@@ -18,11 +16,14 @@ enum class port_dir_t : bool; // fwd
 
 struct end_point
 {
-  model *_model;
-  port *_port;
+  using build_ret_t = std::pair<connection_state, std::optional<end_point>>;//std::pair<connection_state, std::unique_ptr<end_point>>;
 
-  end_point(model *n, port *p);
-  end_point(model *n, std::uint64_t p, port_dir_t dir);
+  model * _model;
+  port * _port;
+
+  end_point(model * n, port *p);
+  end_point(model * n, std::uint64_t pidx, port_dir_t dir);
+  static build_ret_t build(model * n, std::uint64_t p, port_dir_t dir);
 
   bool operator==(const end_point &other) const;
 };

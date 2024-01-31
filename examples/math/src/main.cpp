@@ -216,7 +216,7 @@ void example()
 
   float lsrc_init_val = -110.0f;
   float lsrc_step_val = 1.0f;
-  math_lib.register_model<linear_source<float>>("Liniar Source", lsrc_init_val,
+  math_lib.register_model<linear_source<float>>("Linear Source", lsrc_init_val,
                                                 lsrc_step_val);
 
   double gain_val = 2.0;
@@ -227,7 +227,7 @@ void example()
   math_lib.register_model<sink<double>>("Sink");
 
   auto csrc = math_lib.build_model("Constant Source");
-  auto lsrc = math_lib.build_model("Liniar Source");
+  auto lsrc = math_lib.build_model("Linear Source");
   auto type_conv = math_lib.build_model("Type Convertor");
   auto sum = math_lib.build_model("Sum");
   auto gain_ = math_lib.build_model("Gain");
@@ -260,8 +260,8 @@ void example()
   auto [s5, gain_sync] = connection::build(gain_o_0, sync_0);
 
   /****************** EXECUTE ******************/
-  // exacution order is:
-  // 0 -> Constant Source and Liniar Source
+  // execution order is:
+  // 0 -> Constant Source and Linear Source
   // 1 -> Type Convertor
   // 2 -> Sum
   // 3 -> Gain
@@ -285,7 +285,7 @@ void example()
 
   /****************** CHECK ******************/
 
-  // (ticks - 1) because on the first tick liniar_source sets the init value as
+  // (ticks - 1) because on the first tick linear_source sets the init value as
   // output and then updates the value for the next tick
   double expected_val =
       (csrc_val + (((double)(ticks - 1) * lsrc_step_val) + lsrc_init_val)) *
@@ -304,7 +304,7 @@ int main()
   std::cout << "|Constant Source| -------------------------------> |     | \n";
   std::cout << "                                                   | Sum | "
             << "-------> | Gain | -------> | Unit Delay | -------> | Sink | \n";
-  std::cout << "|Liniar Source| -------> |Type Convertor| -------> |     | \n";
+  std::cout << "|Linear Source| -------> |Type Convertor| -------> |     | \n";
   std::cout << "\n\n\n\n";
 
   example();

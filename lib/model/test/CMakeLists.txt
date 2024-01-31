@@ -22,6 +22,7 @@ add_executable(
     model_unit_tests
     t_node.cpp
     t_model.cpp
+    t_connection.cpp
 )
 target_link_libraries(
     model_unit_tests

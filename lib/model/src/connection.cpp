@@ -3,11 +3,15 @@
 #include "data_type.hpp"
 #include "model.hpp"
 #include "port.hpp"
+#include <memory>
+#include <optional>
 
-namespace mbd {
+namespace mbd
+{
 
 connection::build_ret_t connection::build(const end_point &from,
-                                          const end_point &to) {
+                                          const end_point &to)
+{
   if (from._model == to._model)
     return {connection_state::ERR_SAME_MODEL, nullptr};
 
@@ -28,7 +32,8 @@ connection::build_ret_t connection::build(const end_point &from,
 }
 
 connection::connection(const end_point &from, const end_point &to)
-    : _from(from), _to(to) {
+    : _from(from), _to(to)
+{
   // set the to._port connected flag
   _to._port->set_connected(true);
 
@@ -45,7 +50,8 @@ connection::connection(const end_point &from, const end_point &to)
   _to._port->_data = _from._port->_data;
 }
 
-connection::~connection() {
+connection::~connection()
+{
   // reset the to._port connected flag
   _to._port->set_connected(false);
 
@@ -54,16 +60,18 @@ connection::~connection() {
   std::swap(_data_ptr, _to._port->_data);
 }
 
-bool connection::operator==(
-    const std::pair<end_point, end_point> &other) const {
+bool connection::operator==(const std::pair<end_point, end_point> &other) const
+{
   return this->_from == other.first && this->_to == other.second;
 }
 
-connection::models_t connection::get_models() const {
+connection::models_t connection::get_models() const
+{
   return {_from._model, _to._model};
 }
 
-connection::end_points_t connection::get_end_points() const {
+connection::end_points_t connection::get_end_points() const
+{
   return {&_from, &_to};
 }
 
@@ -71,14 +79,30 @@ connection::end_points_t connection::get_end_points() const {
 
 end_point::end_point(model *n, port *p) : _model(n), _port(p) {}
 
-end_point::end_point(model *n, std::uint64_t p, port_dir_t dir) : _model(n) {
-  if (dir == port_dir_t::IN)
-    _port = &_model->_in_ports[p];
-  else
-    _port = &_model->_out_ports[p];
+end_point::build_ret_t end_point::build(model *m, std::uint64_t pidx,
+                                        port_dir_t dir)
+{
+  port p;
+  if (dir == port_dir_t::IN && m->_in_ports.size() <= pidx)
+  {
+    return {connection_state::ERR_IN_PORT_INVALID, {}};
+  }
+
+  if (dir == port_dir_t::OUT && m->_out_ports.size() <= pidx)
+  {
+    return {connection_state::ERR_OUT_PORT_INVALID, {}};
+  }
+
+  return {connection_state::VALID, end_point(m, pidx, dir)};
 }
 
-bool end_point::operator==(const end_point &other) const {
+end_point::end_point(model *m, std::uint64_t p, port_dir_t dir)
+    : _model(m), _port(dir == port_dir_t::IN ? &_model->_in_ports[p]
+                                             : &_model->_out_ports[p])
+{}
+
+bool end_point::operator==(const end_point &other) const
+{
   return _model == other._model && _port == other._port;
 }
 
