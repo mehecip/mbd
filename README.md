@@ -16,10 +16,10 @@
 
 
 ```Shell
-	git clone https://github.com/mehecip/mbd.git
-	cd mbd
-	cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
-	make f=Makefile
+git clone https://github.com/mehecip/mbd.git
+cd mbd
+cmake -DBUILD_CONTROLLER=On -DBUILD_EXAMPLES=On .
+make f=Makefile
 ```
 </details>
 
@@ -30,36 +30,36 @@
 
 ```c++
 
-	#include "model.hpp"
+#include "model.hpp"
 
-	class gain : public model
+class gain : public model
+{
+public:
+
+	/** Build your model: add inputs, outputs and parameters. */
+	gain(const std::string& name, double gain) : model(name)
 	{
-	public:
-
-		/** Build your model: add inputs, outputs and parameters. */
-		gain(const std::string& name, double gain) : model(name)
-		{
-			model::add_input<double>("In 0", 0.0);
-			model::add_output<double>("Out 0", 0.0);
-
-			model::add_param<double>("gain_factor", gain);
-		}
-
-		/** Update your model: read inputs/parameters and set outputs/parameters. */
-		void update(std::uint64_t tick) override
-		{
-			const double in = model::get_input<double>(0);
-			const double gain = model::get_param<double>("gain_factor");
-			
-			model::set_output<double>(0, in * gain);
-		}
-
-		/** Let the controller know if the model behaves as a source. */
-		bool is_source() const override
-		{
-			return false;
-		}
-	};
+		model::add_input<double>("In 0", 0.0);
+		model::add_output<double>("Out 0", 0.0);
+	
+		model::add_param<double>("gain_factor", gain);
+	}
+	
+	/** Update your model: read inputs/parameters and set outputs/parameters. */
+	void update(std::uint64_t tick) override
+	{
+		const double in = model::get_input<double>(0);
+		const double gain = model::get_param<double>("gain_factor");
+		
+		model::set_output<double>(0, in * gain);
+	}
+	
+	/** Let the controller know if the model behaves as a source. */
+	bool is_source() const override
+	{
+		return false;
+	}
+};
 	
 ```
 
@@ -67,8 +67,8 @@
 
 ```c++
 
-	mbd::lib my_lib("My Lib");
-	my_lib.register_model<gain>("Times Pi", 3.1415);
+mbd::lib my_lib("My Lib");
+my_lib.register_model<gain>("Times Pi", 3.1415);
 ```
 
 <details>
@@ -78,34 +78,34 @@
 
 ```c++
 
-	auto gain_ = my_lib.build_model("Times Pi");
-	auto src_ = my_lib.build_model("Liniar Source");
-	auto sink_ = my_lib.build_model("Sink");
+auto gain_ = my_lib.build_model("Times Pi");
+auto src_ = my_lib.build_model("Liniar Source");
+auto sink_ = my_lib.build_model("Sink");
 ```
 	
 ### Connect:
 
 ```c++
 
-	mbd::end_point src_0{src_, 0, port_dir_t::OUT};
-	mbd::end_point gain_0{gain_, 0, port_dir_t::IN};
+mbd::end_point src_0{src_, 0, port_dir_t::OUT};
+mbd::end_point gain_0{gain_, 0, port_dir_t::IN};
 
-	auto [state, src_to_gain] = connection::build(src_0, gain_0);
+auto [state, src_to_gain] = connection::build(src_0, gain_0);
 
-	/**************************************************************
-		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
-	***************************************************************/
+/**************************************************************
+	| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
+***************************************************************/
 ```
 ### Execute (in the correct order):
 
 ```c++	
 
-	for (std::uint64_t i = 0; i < 10; ++i)
-	{
-		src_->update(i);
-		gain_->update(i);
-		sink_->update(i);
-	}
+for (std::uint64_t i = 0; i < 10; ++i)
+{
+	src_->update(i);
+	gain_->update(i);
+	sink_->update(i);
+}
 ```
 
 </details>
@@ -116,60 +116,60 @@
 
 ```c++
 
-	#include "controller.hpp"
-	
-	void message_callback(log_level lvl, const std::string& msg)
-	{
-		std::cout << level_info(lvl) << ": " << msg << "\n";
-	}
-	
-	mbd::controller cntrl(message_callback);
+#include "controller.hpp"
+
+void message_callback(log_level lvl, const std::string& msg)
+{
+	std::cout << level_info(lvl) << ": " << msg << "\n";
+}
+
+mbd::controller cntrl(message_callback);
 ```
 ### Add the models:
 
 ```c++
 
-	cntrl.add_library(my_lib);
+cntrl.add_library(my_lib);
 
-	cntrl.add_model("My Lib", "Times Pi");
-	cntrl.add_model("My Lib", "Liniar Source");
-	cntrl.add_model("My Lib", "Sink");
+cntrl.add_model("My Lib", "Times Pi");
+cntrl.add_model("My Lib", "Liniar Source");
+cntrl.add_model("My Lib", "Sink");
 ```
 
 ### Connect the models:
 
 ```c++
 
-	cntrl.connect("Liniar Source", 0, "Times Pi", 0);
-	cntrl.connect("Times Pi", 0, "Sink", 0);
+cntrl.connect("Liniar Source", 0, "Times Pi", 0);
+cntrl.connect("Times Pi", 0, "Sink", 0);
 
-	/**************************************************************
-		| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
-	***************************************************************/
+/**************************************************************
+	| Liniar Source |0>-------->0| Gain |0>-------->0| Sink | 
+***************************************************************/
 ```
 	
 ### Find algebraic loops:
 
 ```c++
 
-	std::size_t n_loops = cntrl.find_algebraic_loops();
+std::size_t n_loops = cntrl.find_algebraic_loops();
 ```
 ### Calculate execution order and run all models:
 
 ```c++
 
-	// syncronous
-	cntrl.run(10'000);
-	
-	// or asyncronous
-	cntrl.run_async(10'000);
+// syncronous
+cntrl.run(10'000);
+
+// or asyncronous
+cntrl.run_async(10'000);
 ```
 ### Get:
 
 ```c++
 
-	auto sink_ = cntrl.get<sink>("Sink");
-	double value = sink_->read();
+auto sink_ = cntrl.get<sink>("Sink");
+double value = sink_->read();
 ```
 
 ## ToDO:
