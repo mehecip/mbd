@@ -34,8 +34,9 @@ connection::build_ret_t connection::build(const end_point &from,
 connection::connection(const end_point &from, const end_point &to)
     : _from(from), _to(to)
 {
-  // set the to._port connected flag
+  // set the to and from _port connected flag
   _to._port->set_connected(true);
+  _from._port->set_connected(true);
 
   // Connecting 2 ports boils down to making sure that both point to the same
   // memory location. By doing this, the connection itself does not need to be
@@ -52,8 +53,9 @@ connection::connection(const end_point &from, const end_point &to)
 
 connection::~connection()
 {
-  // reset the to._port connected flag
+  // reset the to and from _port connected flag
   _to._port->set_connected(false);
+  _from._port->set_connected(false);
 
   // set the input port data pointer to the old input port data pointer
   _to._port->_data = nullptr;
