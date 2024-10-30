@@ -68,7 +68,12 @@ jobs:
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
-    - name: Test
+    - name: Test on Linux
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       if: runner.os == 'Linux'
       run: lib/model/test/model_unit_tests
+
+    - name: Test on Windows
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      if: runner.os == 'Windows'
+      run: lib\model\test\Release\model_unit_tests.exe
