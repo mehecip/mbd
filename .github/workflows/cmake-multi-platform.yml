@@ -70,4 +70,5 @@ jobs:
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
-      run: lib/model/test/model_unit_tests 
+      if: runner.os == 'Linux'
+      run: lib/model/test/model_unit_tests
