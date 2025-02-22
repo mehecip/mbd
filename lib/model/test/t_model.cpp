@@ -222,7 +222,7 @@ TEST(ModelTest, MessageDispatcher)
     EXPECT_NO_THROW(sink.update(tick)); // does not add any messages
 
     const std::size_t total_log_msgs = std::accumulate(
-        log_counters.cbegin(), log_counters.cend(), 0,
+        log_counters.cbegin(), log_counters.cend(), 0ull,
         [](std::size_t prev, const auto &pair) { return prev + pair.second; });
 
     EXPECT_EQ(total_log_msgs, tick + 1);

@@ -17,7 +17,7 @@ set(HPP_FILES
   header/dfs.hpp
 )
 
-add_library( controller STATIC
+add_library(controller STATIC
 	${HPP_FILES}
 	${CPP_FILES}
 )
@@ -27,12 +27,13 @@ header
 ../../lib/model/header
 )
 
+add_subdirectory(test)
+
 find_package(Threads)
 target_link_libraries(controller 
 	model
 	${CMAKE_THREAD_LIBS_INIT}
 )
-
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
