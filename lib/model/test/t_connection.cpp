@@ -30,7 +30,7 @@ public:
 
   void update(const std::size_t tick) override
   {
-    set_output<float>("out1", tick);
+    set_output<float>("out1", float(tick));
   }
 
   bool is_source() const override { return true; }
@@ -233,7 +233,7 @@ TEST(ConnectionTest, UpdateAfterSimpleConnect)
     EXPECT_EQ(src._out_ports[0].read_data<float>(), tick);
 
     // as an optimisation, the outport auto updates the inport on source
-    // update() call so we get the sink input  has the data available
+    // update() call so when we get the sink input it already has the data available
     // before calling update() on the sink
     EXPECT_EQ(snk.get_input<float>(0), tick);
     snk.update(tick);
@@ -263,8 +263,8 @@ TEST(ConnectionTest, UpdateAfterSimpleDisconnect)
       EXPECT_EQ(src._out_ports[0].read_data<float>(), tick);
 
       // as an optimisation, the outport auto updates the inport on source
-      // update() call so we get the sink input  has the data available
-      // before calling update() on the sink
+      // update() call so when we get the sink input it already has the data
+      // available before calling update() on the sink
       EXPECT_EQ(snk.get_input<float>(0), tick);
       snk.update(tick);
       EXPECT_EQ(snk.get_input<float>(0), tick);
@@ -313,8 +313,8 @@ TEST(ConnectionTest, UpdateAfterMultiConnect)
         EXPECT_EQ(src._out_ports[0].read_data<float>(), tick);
 
         // as an optimisation, the outport auto updates the inport on source
-        // update() call so we get the sink input  has the data available
-        // before calling update() on the sink
+        // update() call so when we get the sink input it already has the data
+        // available before calling update() on the sink
         EXPECT_EQ(snk1.get_input<float>(0), tick);
         snk1.update(tick);
         EXPECT_EQ(snk1.get_input<float>(0), tick);
