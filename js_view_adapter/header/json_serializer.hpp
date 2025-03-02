@@ -131,7 +131,7 @@ void to_json(json &j, const mbd::lib &l);
 ****************************************************************/
 
 /***************************************************************
-reigster_type allows users to register a custom parameter
+register_type allows users to register a custom parameter
 type after implementing to_json() and from_json() functions. 
 In this way, the serializer will be able to convert the
 mbd::param<user_type> to json and back.
@@ -144,11 +144,11 @@ void from_json(...) {...}
 
 // in e.g.  the model model constructor 
 ...
-mbd::reigster_type<my_pod>("my_pod_type");
+mbd::register_type<my_pod>("my_pod_type");
 
 ****************************************************************/
 template <typename T> 
-void reigster_type(const std::string &type_name) {
+void register_type(const std::string &type_name) {
   h_to_json_map.emplace(typeid(T), h_to_json_helper<T>);
   h_from_json_map.emplace(typeid(T), h_from_json_helper<T>);
   std::type_to_string_map.emplace(typeid(T), type_name);
