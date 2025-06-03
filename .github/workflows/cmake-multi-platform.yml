@@ -71,9 +71,9 @@ jobs:
     - name: Test on Linux
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       if: runner.os == 'Linux'
-      run: lib/model/test/model_unit_tests
+      run: lib/model/test/model_unit_tests lib/controller/test/controller_unit_tests
 
     - name: Test on Windows
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       if: runner.os == 'Windows'
-      run: lib\model\test\Release\model_unit_tests.exe
+      run: lib\model\test\Release\model_unit_tests.exe lib\controller\test\Release\controller_unit_tests.exe
