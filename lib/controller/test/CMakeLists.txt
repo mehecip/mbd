@@ -21,6 +21,7 @@ include_directories(../header)
 add_executable(
     controller_unit_tests
     t_library.cpp
+    t_controller.cpp
 )
 target_link_libraries(
     controller_unit_tests
