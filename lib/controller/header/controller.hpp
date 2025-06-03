@@ -41,7 +41,7 @@ public:
   // computed
   std::size_t find_algebraic_loops();
 
-  void execution_order();
+  std::vector<model_vec_t> execution_order();
 
   // synchonous execution(in the order from execution order)
   void run(std::uint64_t ticks);
@@ -60,12 +60,16 @@ public:
   const mbd::graph& get_graph() const {return _g;}
 
 private:
+
+  void log_prio(const std::vector<std::vector<model *>> &v);
+
   msg_callback_f _callback_f;
+
+  // start at 1 otherwise its just confusing
+  std::size_t _current_tick = 1ull;
 
   graph _g;
   std::unordered_map<std::string, lib> _libs;
-
-  void log_prio(const std::vector<std::vector<model *>> &v);
 };
 
 template <typename T>

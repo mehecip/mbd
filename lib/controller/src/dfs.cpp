@@ -36,7 +36,7 @@ std::vector<model_vec_t> dfs::order() {
 
   const auto &get_model_prio =
       [&](auto *m, std::uint64_t current_prio) -> std::uint64_t {
-    if (!m->is_source()) // is source
+    if (m->is_source()) 
     {
       return 0ul;
     }

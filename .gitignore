@@ -5,3 +5,5 @@ js_web_server/*
 **/CMakeFiles/**
 **/cmake_install.cmake
 **/Makefile
+out/*
+.vs/*
