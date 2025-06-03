@@ -28,7 +28,7 @@ public:
     _ctrl.add_library(lib);
     for (const auto &type : lib.get_model_types())
     {
-      _ctrl.add_model(lib.get_name(), type) != nullptr;
+      _ctrl.add_model(lib.get_name(), type);
     }
   }
 
@@ -37,7 +37,7 @@ public:
     _ctrl.add_library(lib);
     for (const auto &type : models)
     {
-      _ctrl.add_model(lib.get_name(), type) != nullptr;
+      _ctrl.add_model(lib.get_name(), type);
     }
   }
 
