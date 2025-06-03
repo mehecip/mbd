@@ -52,7 +52,7 @@ else()
 	endif()
 endif()
 
-set_target_properties(model
+set_target_properties(controller
   PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
 )
