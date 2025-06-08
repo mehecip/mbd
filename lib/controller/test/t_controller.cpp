@@ -93,6 +93,25 @@ TEST(ControllerTest, tConnect)
   EXPECT_EQ(flag, true) << "Connect should work.";
 }
 
+TEST(ControllerTest, tReconnect)
+{
+  ControllerFixture fx;
+  fx.addAllModels(get_math_lib<double>("double"));
+
+  auto flag = fx._ctrl.connect("constant source", 0, "add", 0);
+  EXPECT_EQ(flag, true) << "Connect should work.";
+
+  flag = fx._ctrl.disconnect("constant source", 0, "add", 0);
+  EXPECT_EQ(flag, true) << "Disconnect should work.";
+
+  flag = fx._ctrl.connect("constant source", 0, "add", 0);
+  EXPECT_EQ(flag, true) << "Reconnect should work.";
+
+  flag = fx._ctrl.connect("constant source", 0, "add", 0);
+  EXPECT_EQ(flag, false) << "Connecting allready connected models should fail.";
+
+}
+
 
 TEST(ControllerTest, tExecutionOrder)
 {
