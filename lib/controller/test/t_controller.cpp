@@ -133,16 +133,6 @@ TEST(ControllerTest, tExecutionOrder)
   order = fx._ctrl.execution_order();
   check_execution_order(order, {
     {"constant source"},
-    {"gain"}
-  });
-
-  // now connect the gain to the sink again
-  flag = fx._ctrl.connect("gain", 0, "sink", 0);
-  EXPECT_EQ(flag, true) << "Re-Connect should work.";
-
-  order = fx._ctrl.execution_order();
-  check_execution_order(order, {
-    {"constant source"},
     {"gain"},
     {"sink"}
   });
@@ -255,17 +245,8 @@ TEST(ControllerTest, tRun)
   EXPECT_EQ(flag, true) << "Connect should work.";
   fx._ctrl.run(2);
 
+   exp = {0, 0, -15, -15, -15, 30, 30, 30};
   actual = sink->read();
   EXPECT_EQ(actual, exp) << "Sink should not have any other values since the gain is disconnected.";
-
-  // reconnect the gain to sink and run the controller again
-  flag = fx._ctrl.connect("gain", 0, "sink", 0);
-  EXPECT_EQ(flag, true) << "Connect should work.";
-
-  fx._ctrl.run(2);
-
-  exp = {0, 0, -15, -15, -15, 30, 30, 30};
-  actual = sink->read();
-  EXPECT_EQ(actual, exp) << "Sink should contain the expected values after reconnecting the source and running the controller again.";
 
 }

@@ -67,9 +67,9 @@ bool graph::disconnect(const std::string &out_model, std::uint64_t out_idx,
   std::pair<end_point, end_point> conn{from, to};
 
   _connections.erase(
-      std::find_if(_connections.cbegin(), _connections.cend(),
+      std::remove_if(_connections.begin(), _connections.end(),
                    [&conn](const auto &c) { return *c.get() == conn; }),
-      _connections.cend());
+      _connections.end());
 
   _dirty_algeb_cache = true;
   _dirty_order_cache = true;
