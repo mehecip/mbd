@@ -41,18 +41,32 @@ public:
     }
   }
 
-  mbd::controller _ctrl;
+  ~ControllerFixture()
+  {
+    // Clear the log after each test to avoid interference
+    _log.clear();
+  }
 
-private:
+
+  mbd::controller _ctrl;
+  static std::unordered_map<mbd::log_level, std::vector<std::string>> _log;
+
+  private:
   static void message_callback(log_level lvl, const std::string &msg)
   {
     std::cout << level_info(lvl) << ": " << msg << "\n";
+    _log[lvl].push_back(msg);
   }
 };
+
+std::unordered_map<mbd::log_level, std::vector<std::string>> ControllerFixture::_log;
 
 const auto &check_execution_order =
     [](const auto &actual_models,
        const std::vector<std::vector<std::string>> &expected_names) {
+
+      ASSERT_EQ(actual_models.size(), expected_names.size())
+          << "Execution order size mismatch.";
 
       std::vector<std::vector<std::string>> actual_names;
       for (const auto &models : actual_models)
@@ -72,6 +86,7 @@ const auto &check_execution_order =
 TEST(ControllerTest, tConnect)
 {
   ControllerFixture fx;
+ 
   fx.addAllModels(get_math_lib<double>("double"));
 
   auto flag = fx._ctrl.connect("constant source", 0, "add", 0);
@@ -96,6 +111,7 @@ TEST(ControllerTest, tConnect)
 TEST(ControllerTest, tReconnect)
 {
   ControllerFixture fx;
+ 
   fx.addAllModels(get_math_lib<double>("double"));
 
   auto flag = fx._ctrl.connect("constant source", 0, "add", 0);
@@ -118,6 +134,7 @@ TEST(ControllerTest, tExecutionOrder)
   auto lib = get_math_lib<double>("double");
 
   ControllerFixture fx;
+
   fx.addModels(lib, {"const_src", "gain", "sink"});
   /*
   
@@ -163,6 +180,7 @@ TEST(ControllerTest, tExecutionOrder_MultipleSources)
   auto lib = get_math_lib<double>("double");
 
   ControllerFixture fx;
+ 
   fx.addModels(lib, {"const_src", "gain", "sink", "lin_src", "double_to", "sum", "delay"});
 
   auto flag = fx._ctrl.connect("constant source", 0, "add", 0);
@@ -198,6 +216,7 @@ TEST(ControllerTest, tExecutionOrder_UnconnectedSources)
   auto lib = get_math_lib<double>("double");
 
   ControllerFixture fx;
+ 
   fx.addAllModels(lib);
 
   auto order = fx._ctrl.execution_order();
@@ -211,6 +230,7 @@ TEST(ControllerTest, tRun)
   auto lib = get_math_lib<int>("int");
 
   ControllerFixture fx;
+ 
   fx.addModels(lib, {"const_src", "gain", "sink"});
 
   auto flag = fx._ctrl.connect("constant source", 0, "gain", 0);
@@ -268,4 +288,111 @@ TEST(ControllerTest, tRun)
   actual = sink->read();
   EXPECT_EQ(actual, exp) << "Sink should not have any other values since the gain is disconnected.";
 
+}
+
+TEST(ControllerTest, tAlgebraicLoop)
+{
+
+    ControllerFixture fx;
+   
+
+    auto lib_name = "MathLib - double";
+    auto lib = get_math_lib<double>("double");
+    fx._ctrl.add_library(lib);
+
+    auto delay1 = fx._ctrl.add_model(lib_name, "delay");
+    delay1->set_name("Delay 1");
+
+    auto delay2 = fx._ctrl.add_model(lib_name, "delay");
+    delay2->set_name("Delay 2");
+
+    auto sum1 = fx._ctrl.add_model(lib_name, "sum");
+    sum1->set_name("Sum 1");
+
+    auto sum2 = fx._ctrl.add_model(lib_name, "sum");
+    sum2->set_name("Sum 2");
+
+    bool flag = fx._ctrl.connect("Delay 1", 0, "Sum 1", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 1", 0, "Delay 1", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 1", 0, "Sum 2", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Delay 2", 0, "Sum 2", 1);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 2", 0, "Sum 1", 1);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 2", 0, "Delay 2", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+
+    auto n = fx._ctrl.find_algebraic_loops();
+    EXPECT_EQ(n, 1) << "There should one algebraic loop: [Sum 1] <-> [Sum 2]";
+
+    EXPECT_EQ(fx._log[mbd::log_level::ERROR].size(), 1)
+          << "There should be one ERROR message for the algebraic loop.";
+
+    EXPECT_EQ(fx._log[mbd::log_level::ERROR].front(), "1 algebraic loop/s found: \n[Sum 2] [Sum 1] \n")
+          << "Message should match the expected algebraic loop message.";
+
+    auto order = fx._ctrl.execution_order();
+    check_execution_order(order, {}); // execution order should be empty since there is an algebraic loop
+}
+
+
+TEST(ControllerTest, tAlgebraicLoops)
+{
+
+    ControllerFixture fx;
+
+    auto lib_name = "MathLib - double";
+    auto lib = get_math_lib<double>("double");
+    fx._ctrl.add_library(lib);
+
+    auto delay1 = fx._ctrl.add_model(lib_name, "delay");
+    delay1->set_name("Delay 1");
+
+    auto sum1 = fx._ctrl.add_model(lib_name, "sum");
+    sum1->set_name("Sum 1");
+
+    auto sum2 = fx._ctrl.add_model(lib_name, "sum");
+    sum2->set_name("Sum 2");
+
+    fx._ctrl.add_model(lib_name, "gain");
+
+    bool flag = fx._ctrl.connect("Sum 1", 0, "gain", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("gain", 0, "Sum 1", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 1", 0, "Sum 2", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 2", 0, "Sum 1", 1);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Sum 2", 0, "Delay 1", 0);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    flag = fx._ctrl.connect("Delay 1", 0, "Sum 2", 1);
+    EXPECT_EQ(flag, true) << "Connect should work.";
+
+    auto n = fx._ctrl.find_algebraic_loops();
+    EXPECT_EQ(n, 2) << "There should two algebraic loops"
+          << ": [Sum 1] <-> [gain] and [Sum 1] <-> [Sum 2]";
+
+    EXPECT_EQ(fx._log[mbd::log_level::ERROR].size(), 1)
+          << "There should be one ERROR message for the algebraic loop.";
+    EXPECT_EQ(fx._log[mbd::log_level::ERROR].front(), "2 algebraic loop/s found: \n[Sum 1] [gain] \n[Sum 1] [Sum 2] \n")
+          << "Message should match the expected algebraic loop message.";
+
+
+    auto order = fx._ctrl.execution_order();
+    check_execution_order(order, {}); // execution order should be empty since there is an algebraic loop
 }
