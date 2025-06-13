@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
 project(controller_unit_tests)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+    URL https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz
 )
 
 
