@@ -113,19 +113,20 @@ void controller::log_prio(const std::vector<std::vector<model *>> &v)
 std::size_t controller::find_algebraic_loops()
 {
   const auto &loops = _g.algebraic_loops();
-  if (loops.size() != 0)
-  {
-    std::ostringstream ss;
-    ss << loops.size() << " algebraic loop/s found: \n";
-    for (const auto &l : loops)
-    {
-      for (const auto &m : l)
-        ss << "[" << m->get_name() << "] ";
-      ss << "\n";
-    }
+  if (loops.empty())
+    return 0;
 
-    _callback_f(log_level::ERROR, ss.str());
+  
+  std::ostringstream ss;
+  ss << loops.size() << " algebraic loop/s found: \n";
+  for (const auto &l : loops)
+  {
+    for (const auto &m : l)
+      ss << "[" << m->get_name() << "] ";
+    ss << "\n";
   }
+
+  _callback_f(log_level::ERROR, ss.str());
 
   return loops.size();
 }

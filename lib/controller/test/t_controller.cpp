@@ -337,7 +337,7 @@ TEST(ControllerTest, tAlgebraicLoop)
     EXPECT_EQ(fx._log[mbd::log_level::ERROR].size(), 1)
           << "There should be one ERROR message for the algebraic loop.";
 
-    EXPECT_EQ(fx._log[mbd::log_level::ERROR].front(), "1 algebraic loop/s found: \n[Sum 2] [Sum 1] \n")
+    EXPECT_EQ(fx._log[mbd::log_level::ERROR].front(), "1 algebraic loop/s found: \n[Sum 1] [Sum 2] \n")
           << "Message should match the expected algebraic loop message.";
 
     auto order = fx._ctrl.execution_order();
