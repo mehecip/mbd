@@ -152,7 +152,7 @@ cntrl.connect("Times Pi", 0, "Sink", 0);
 
 ```c++
 
-std::size_t n_loops = cntrl.find_algebraic_loops();
+bool has_loops = cntrl.has_algebraic_loops();
 ```
 ### Calculate execution order and run all models:
 

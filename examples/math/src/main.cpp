@@ -159,7 +159,7 @@ void algebraic_loop()
     assert(flag && "All connections should have been made");
 
     std::cout << "LOOP 1 *********** [Sum 1] <-> [Sum 2] ********* \n ";
-    auto n = cntrl.find_algebraic_loops();
+    auto n = cntrl.has_algebraic_loops();
 
     assert(n == 1 && "There should one algebraic loop: [Sum 1] <-> [Sum 2]");
   }
@@ -191,9 +191,9 @@ void algebraic_loop()
     assert(flag && "All connections should have been made");
 
     std::cout << "LOOP 2 *********** [Sum 1] <-> [gain] and [Sum 1] <-> [Sum 2] ********* \n ";
-    auto n = cntrl.find_algebraic_loops();
+    auto n = cntrl.has_algebraic_loops();
 
-    assert(n == 2 && "There should two algebraic loops: [Sum 1] <-> [gain] and [Sum 1] <-> [Sum 2]");
+    assert(n && "There should two algebraic loops: [Sum 1] <-> [gain] and [Sum 1] <-> [Sum 2]");
   }
 }
 

@@ -110,11 +110,11 @@ void controller::log_prio(const std::vector<std::vector<model *>> &v)
   _callback_f(log_level::DEBUG, ss.str());
 }
 
-std::size_t controller::find_algebraic_loops()
+bool controller::has_algebraic_loops()
 {
   const auto &loops = _g.algebraic_loops();
   if (loops.empty())
-    return 0;
+    return false;
 
   
   std::ostringstream ss;
@@ -128,7 +128,12 @@ std::size_t controller::find_algebraic_loops()
 
   _callback_f(log_level::ERROR, ss.str());
 
-  return loops.size();
+  return true;
 }
 
+
+std::vector<model_vec_t> controller::get_algebraic_loops()
+{
+  return _g.algebraic_loops();
+}
 } // namespace mbd
