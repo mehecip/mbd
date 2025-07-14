@@ -75,6 +75,7 @@ jobs:
       run: |
         lib/model/test/model_unit_tests
         lib/controller/test/controller_unit_tests
+        lib/controller/test/controller_benchmark
 
     - name: Test on Windows
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
@@ -82,3 +83,4 @@ jobs:
       run: |
         lib\model\test\Release\model_unit_tests.exe
         lib\controller\test\Release\controller_unit_tests.exe
+        lib\controller\test\Release\controller_benchmark.exe
