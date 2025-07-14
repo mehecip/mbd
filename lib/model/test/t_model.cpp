@@ -56,7 +56,7 @@ public:
     add_input("in", 3.14f);
     add_param("history", std::vector<float>{});
   }
-  void update(const std::size_t tick) override
+  void update(const std::size_t) override
   {
 
     const auto &v = get_input<float>("in");

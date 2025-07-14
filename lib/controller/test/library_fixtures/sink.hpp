@@ -16,7 +16,7 @@ public:
     model::add_param(_values, std::vector<T>{});
   }
 
-  void update(std::uint64_t tick) override
+  void update(std::uint64_t) override
   {
     const auto val = model::get_input<T>(0);
     auto new_vals = model::get_param<std::vector<T>>(_values); 

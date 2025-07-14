@@ -48,7 +48,7 @@ public:
     add_output<std::string>("out2", "string");
   }
 
-  void update(const std::size_t tick) override {}
+  void update(const std::size_t) override {}
   bool is_source() const override { return false; }
 };
 } // namespace

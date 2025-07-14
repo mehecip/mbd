@@ -16,7 +16,7 @@ public:
     add_output<T>(_name + "_OUT", _value);
   }
 
-  void update(std::uint64_t tick) override
+  void update(std::uint64_t) override
   {
     set_output<T>(0, T{_value});
     _value = get_input<T>(0);
