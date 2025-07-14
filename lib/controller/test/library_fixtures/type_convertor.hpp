@@ -21,7 +21,7 @@ public:
     add_output<OUT>(_name + "_OUT", OUT{});
   }
 
-  void update(std::uint64_t tick) override
+  void update(std::uint64_t) override
   {
     if constexpr (std::is_same<IN, OUT>::value)
     {

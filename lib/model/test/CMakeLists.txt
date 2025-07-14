@@ -1,13 +1,28 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.10)
+
 project(model_unit_tests)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		set(CMAKE_CXX_FLAGS "/std:c++17 /O2 /Ob2 /EHsc")
+	else()
+		set(CMAKE_CXX_FLAGS "-std=c++17 -g3 -O0 -Wall -Wextra")
+	endif()
+else()
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		set(CMAKE_CXX_FLAGS "/std:c++17 /O2 /Ob2 /EHsc")
+	else()
+		set(CMAKE_CXX_FLAGS "-std=c++17 -O3 -Wall -Wextra")
+	endif()
+endif()
+
 include(FetchContent)
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+    URL https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz
 )
 
 
@@ -29,8 +44,6 @@ target_link_libraries(
     model
     GTest::gtest_main
 )
-
-
 
 include(GoogleTest)
 gtest_discover_tests(model_unit_tests)

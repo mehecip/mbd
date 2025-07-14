@@ -34,7 +34,7 @@ class add: public mathop <T>
 public:
 	add() : mathop<T>("add") {}
 
-	void update(std::uint64_t tick) override
+	void update(std::uint64_t) override
 	{
 		const T& in1 = model::get_input<T>(0);
 		const T& in2 = model::get_input<T>(1);
@@ -50,7 +50,7 @@ class subtract : public mathop<T>
 public:
 	subtract() : mathop<T>("subtract") {}
 
-	void update(std::uint64_t tick) override
+	void update(std::uint64_t) override
 	{
 		const T& in1 = model::get_input<T>(0);
 		const T& in2 = model::get_input<T>(1);
@@ -65,7 +65,7 @@ class div : public mathop<T>
 public:
 	div() : mathop<T>("div") {}
 
-	void update(std::uint64_t tick) override
+	void update(std::uint64_t) override
 	{
 		const auto& in1 = model::get_input<T>(0);
 		const auto& in2 = model::get_input<T>(1);
@@ -83,7 +83,7 @@ class mod : public mathop<T>
 public:
 	mod() : mathop<T>("mod") {}
 
-	void update(std::uint64_t tick) override
+	void update(std::uint64_t) override
 	{
 		const auto& in1 = model::get_input<T>(0);
 		const auto& in2 = model::get_input<T>(1);
@@ -98,7 +98,7 @@ class multiply : public mathop<T>
 public:
 	multiply() : mathop<T>("multiply") {}
 
-	void update(std::uint64_t tick) override
+	void update(std::uint64_t) override
 	{
 		const auto& in1 = model::get_input<T>(0);
 		const auto& in2 = model::get_input<T>(1);

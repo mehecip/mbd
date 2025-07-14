@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <stack>
 #include <vector>
+#include <set>
 
 namespace mbd {
 
@@ -91,7 +92,7 @@ std::vector<model_vec_t> dfs::order() {
 std::vector<model_vec_t> dfs::algebraic_loops() {
   std::vector<model_vec_t> loops = get_all_loops();
 
-  // none of the models in a loop are sources
+  // if none of the models in a loop are sources
   // then the loop is algebraic and we keep it
   loops.erase(std::remove_if(loops.begin(), loops.end(),
                              [](const auto &l) {
@@ -102,9 +103,14 @@ std::vector<model_vec_t> dfs::algebraic_loops() {
                              }),
               loops.end());
 
+
   std::sort(loops.begin(), loops.end(), [](auto &lhs, auto &rhs) {
-    std::sort(lhs.begin(), lhs.end());
-    std::sort(rhs.begin(), rhs.end());
+
+    auto is_less = [](const model *lhs_m, const model *rhs_m) {
+    return lhs_m->get_name() < rhs_m->get_name();
+  };
+    std::sort(lhs.begin(), lhs.end(), is_less);
+    std::sort(rhs.begin(), rhs.end(), is_less);
 
     return lhs < rhs;
   });
@@ -124,9 +130,11 @@ std::vector<model_vec_t> dfs::get_all_loops() {
 
     std::unordered_set<model *> visited;
 
-    // store the model and the path [start, model] in queue
-    using stack_t = std::pair<model *, std::unordered_set<model *>>;
-    std::stack<stack_t> stack;
+    // store the model and the path [start, model] in a stack
+    using stack_elem_t = std::pair<model *, std::set<model *>>;
+    using stack_t = std::stack<stack_elem_t>;
+
+    stack_t stack;
     stack.push({start, {start}});
 
     while (!stack.empty()) {
@@ -142,7 +150,7 @@ std::vector<model_vec_t> dfs::get_all_loops() {
 
           stack.push({next, next_path});
         } else if (start == next) {
-          loops.insert(loops.end(), {this_path.begin(), this_path.end()});
+          loops.insert(loops.end(), {this_path.cbegin(), this_path.cend()});
         }
       }
     }

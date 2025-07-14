@@ -4,7 +4,7 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "main" ]
 
@@ -63,6 +63,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
+        -Wno-dev
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
@@ -74,6 +75,7 @@ jobs:
       run: |
         lib/model/test/model_unit_tests
         lib/controller/test/controller_unit_tests
+        lib/controller/test/controller_benchmark
 
     - name: Test on Windows
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
@@ -81,3 +83,4 @@ jobs:
       run: |
         lib\model\test\Release\model_unit_tests.exe
         lib\controller\test\Release\controller_unit_tests.exe
+        lib\controller\test\Release\controller_benchmark.exe

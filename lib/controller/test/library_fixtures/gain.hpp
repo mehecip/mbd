@@ -25,7 +25,7 @@ public:
 		model::set_param<T>(_gain, val);
 	}
 
-	void update(std::uint64_t tick) override
+	void update(std::uint64_t) override
 	{
 		const T& in = model::get_input<T>(0);
 		const T& gain = model::get_param<T>(_gain);

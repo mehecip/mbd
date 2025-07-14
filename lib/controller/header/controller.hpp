@@ -39,7 +39,8 @@ public:
 
   // an algebraic loop is a loop for which the execution order cannot be
   // computed
-  std::size_t find_algebraic_loops();
+  bool has_algebraic_loops();
+  std::vector<model_vec_t> get_algebraic_loops();
 
   std::vector<model_vec_t> execution_order();
 
