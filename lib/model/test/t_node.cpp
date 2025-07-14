@@ -101,11 +101,11 @@ TEST(NodeTest, Custom_type)
   mbd::node n("my_node");
 
   n.add_input<my_type>("in1", {});
-  n.add_param("param", my_type{false, 42});
+  n.add_param("param", my_type{{false}, 42});
 
   my_type in1;
   EXPECT_EQ(n.get_input<my_type>("in1"), in1);
 
-  my_type param{false, 42};
+  my_type param{{false}, 42};
   EXPECT_EQ(n.get_param<my_type>("param"), param);
 }

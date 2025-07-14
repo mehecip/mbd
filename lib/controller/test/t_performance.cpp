@@ -25,6 +25,8 @@ static void tPerfTest(benchmark::State &state)
   flag &= fx._ctrl.connect("unit delay", 0, "gain", 0);
   flag &= fx._ctrl.connect("gain", 0, "sink", 0);
 
+  assert(flag == true && "Connect should work.");
+
   auto csrc = fx._ctrl.get<const_source<double>>("constant source");
   csrc->set_value(10'000.0);
   csrc->set_init_val(-100.0);
@@ -36,12 +38,20 @@ static void tPerfTest(benchmark::State &state)
   auto g = fx._ctrl.get<gain<double>>("gain");
   g->set_value(2.0);
 
-  constexpr static std::uint64_t ticks = 3.1415926 * 5 * 60 * 60;
+  // do not store data in the sink
+  auto s = fx._ctrl.get<sink<double>>("sink");
+  s->store_data(false);
 
-  for (auto s : state)
+  for (auto _ : state)
   {
+    // assuming a tick rate of 0.1 seconds
+    // and a simulation time of pi months
+    constexpr static std::uint64_t ticks = 3.1415926 * 31 * 24 * 60 * 60 * 10;
     fx._ctrl.run(ticks);
   }
 };
 
-BENCHMARK(tPerfTest);
+BENCHMARK(tPerfTest)
+    ->Unit(benchmark::kMillisecond)
+    ->Iterations(1)
+    ->UseRealTime();
