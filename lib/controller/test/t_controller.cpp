@@ -11,130 +11,17 @@
 #include <vector>
 
 #include "controller.hpp"
+#include "controller_helper.hpp"
 #include "library_fixtures/math_lib.hpp"
 #include "model.hpp"
 
 using namespace mbd;
 using namespace tst;
 
-class ControllerFixture
-{
-
-public:
-  ControllerFixture() : _ctrl(ControllerFixture::message_callback) {}
-
-  void addAllModels(const mbd::lib &lib)
-  {
-    _ctrl.add_library(lib);
-    for (const auto &type : lib.get_model_types())
-    {
-      _ctrl.add_model(lib.get_name(), type);
-    }
-  }
-
-  void addModels(const mbd::lib &lib, const std::vector<std::string> &models)
-  {
-    _ctrl.add_library(lib);
-    for (const auto &type : models)
-    {
-      _ctrl.add_model(lib.get_name(), type);
-    }
-  }
-
-  ~ControllerFixture()
-  {
-    // Clear the log after each test to avoid interference
-    _log.clear();
-  }
-
-  mbd::controller _ctrl;
-  static std::unordered_map<mbd::log_level, std::vector<std::string>> _log;
-
-private:
-  static void message_callback(log_level lvl, const std::string &msg)
-  {
-    std::cout << level_info(lvl) << ": " << msg << "\n";
-    _log[lvl].push_back(msg);
-  }
-};
-
-std::unordered_map<mbd::log_level, std::vector<std::string>>
-    ControllerFixture::_log;
-
-const auto &check_execution_order =
-    [](const auto &actual_models,
-       std::vector<std::vector<std::string>> expected_names) {
-
-      ASSERT_EQ(actual_models.size(), expected_names.size())
-          << "Execution order size mismatch.";
-
-      std::vector<std::vector<std::string>> actual_names;
-      for (const auto &models : actual_models)
-      {
-        std::vector<std::string> names;
-        for (const auto &model : models)
-        {
-          names.push_back(model->get_name());
-        }
-        std::sort(names.begin(), names.end());
-        actual_names.push_back(names);
-      }
-
-      // Sort the expected names for comparison
-      std::sort(actual_names.begin(), actual_names.end());
-      std::sort(expected_names.begin(), expected_names.end(), [](const auto &a, const auto &b) {
-        return a < b;
-      });
-
-      EXPECT_EQ(actual_names, expected_names);
-    };
-
-const auto &check_algebraic_loops =
-    [](ControllerFixture &fx,
-       std::vector<std::vector<std::string>> expected_names) {
-
-     
-      if (expected_names.empty())
-      {
-        ASSERT_FALSE(fx._ctrl.has_algebraic_loops())
-            << "There should be no algebraic loops.";
-        return;
-      }
-      else
-      {
-        ASSERT_TRUE(fx._ctrl.has_algebraic_loops())
-            << "There should be algebraic loops.";
-      }
-
-      const auto &actual_loops = fx._ctrl.get_algebraic_loops();
-
-      ASSERT_EQ(actual_loops.size(), expected_names.size())
-          << "Algebraic loops size mismatch.";
-
-      std::vector<std::vector<std::string>> actual_names;
-      for (const auto &loop : actual_loops)
-      {
-        std::vector<std::string> names;
-        for (const auto &model : loop)
-        {
-          names.push_back(model->get_name());
-        }
-        std::sort(names.begin(), names.end());
-        actual_names.push_back(names);
-      }
-
-       // Sort the expected names for comparison
-      std::sort(actual_names.begin(), actual_names.end());
-      std::sort(expected_names.begin(), expected_names.end(), [](const auto &a, const auto &b) {
-        return a < b;
-      });
-
-      EXPECT_EQ(actual_names, expected_names);
-    };
 
 TEST(ControllerTest, tConnect)
 {
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   fx.addAllModels(get_math_lib<double>("double"));
 
@@ -159,7 +46,7 @@ TEST(ControllerTest, tConnect)
 
 TEST(ControllerTest, tReconnect)
 {
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   fx.addAllModels(get_math_lib<double>("double"));
 
@@ -180,7 +67,7 @@ TEST(ControllerTest, tExecutionOrder)
 {
   auto lib = get_math_lib<double>("double");
 
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   fx.addModels(lib, {"const_src", "gain", "sink"});
   /*
@@ -216,7 +103,7 @@ TEST(ControllerTest, tExecutionOrder_MultipleSources)
 {
   auto lib = get_math_lib<double>("double");
 
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   fx.addModels(lib, {"const_src", "gain", "sink", "lin_src", "double_to", "sum",
                      "delay"});
@@ -252,7 +139,7 @@ TEST(ControllerTest, tExecutionOrder_UnconnectedSources)
 {
   auto lib = get_math_lib<double>("double");
 
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   fx.addAllModels(lib);
 
@@ -265,7 +152,7 @@ TEST(ControllerTest, tRun)
 {
   auto lib = get_math_lib<int>("int");
 
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   fx.addModels(lib, {"const_src", "gain", "sink"});
 
@@ -327,14 +214,14 @@ TEST(ControllerTest, tRun)
 
   exp = {0, 0, -15, -15, -15, 30, 30, 30};
   actual = sink->read();
-  EXPECT_EQ(actual, exp) << "Sink should not have any other values since the "
-                            "gain is disconnected.";
+  EXPECT_EQ(actual, exp) << "Sink should contain the expected values after "
+                            "running the controller.";
 }
 
 TEST(ControllerTest, tAlgebraicLoop)
 {
 
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   auto lib_name = "MathLib - double";
   auto lib = get_math_lib<double>("double");
@@ -388,7 +275,7 @@ TEST(ControllerTest, tAlgebraicLoop)
 TEST(ControllerTest, tAlgebraicLoops)
 {
 
-  ControllerFixture fx;
+  ControllerHelper fx;
 
   auto lib_name = "MathLib - double";
   auto lib = get_math_lib<double>("double");
