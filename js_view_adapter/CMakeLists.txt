@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+# cmake_minimum_required(VERSION 3.5)
 
 project(js_view_adapter CXX)
 
@@ -34,7 +34,11 @@ include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
+
 find_package(Threads)
+
+find_package(Boost 1.89.0 REQUIRED COMPONENTS thread)
+
 # find_package(cppzmq)
 # find_package(nlohmann_json 3.11.2 REQUIRED)
 
@@ -52,7 +56,11 @@ target_link_libraries(js_view_adapter_exe
 	# PRIVATE cppzmq
 	PRIVATE nlohmann_json::nlohmann_json
 	${CMAKE_THREAD_LIBS_INIT}
+	#Boost::system 
+    Boost::thread
 )
+
+
 
 
 

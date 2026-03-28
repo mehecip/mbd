@@ -4,6 +4,8 @@ project(math_example CXX)
 
 set(CPP_FILES
   src/main.cpp
+  src/cli_controller_example.cpp
+  src/view_js_adapter_example.cpp
 )
 
 set(HPP_FILES
@@ -13,6 +15,8 @@ set(HPP_FILES
   header/source.hpp
   header/type_convertor.hpp
   header/unit_delay.hpp
+  header/cli_example.hpp
+  header/view_example.hpp
 )
 
 
