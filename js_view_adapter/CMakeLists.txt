@@ -34,10 +34,24 @@ include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
+# cmake_policy(SET CMP0167 NEW)
 
 find_package(Threads)
 
-find_package(Boost 1.89.0 REQUIRED COMPONENTS thread)
+fetchcontent_declare(
+    Boost
+    GIT_REPOSITORY "https://github.com/boostorg/boost.git"
+    GIT_TAG "boost-1.90.0"
+    GIT_PROGRESS ON
+    GIT_SHALLOW ON
+    OVERRIDE_FIND_PACKAGE TRUE # needed to find correct Boost
+    EXCLUDE_FROM_ALL # compile only what you need
+	)
+
+fetchcontent_makeavailable(Boost)
+
+
+find_package(Boost 1.90.0 REQUIRED COMPONENTS thread)
 
 # find_package(cppzmq)
 # find_package(nlohmann_json 3.11.2 REQUIRED)
